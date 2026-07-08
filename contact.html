@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="meta.title">Contact Us — Bhardwaj Gurukul, Begusarai</title>
+  <meta name="description" data-i18n="meta.description"
+    content="Contact Bhardwaj Gurukul Begusarai. Get address, phone, email, map directions, and submit admission inquiries." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saffron: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+            leaf: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534' },
+            crimson: { 50: '#fef2f2', 100: '#fee2e2', 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c' },
+            ink: { 900: '#1c1917', 800: '#292524', 700: '#44403c' },
+            paper: '#fffbf2'
+          },
+          fontFamily: {
+            sans: ['Forum', 'Poppins', 'Inter', 'system-ui', 'serif'],
+            deva: ['Tiro Devanagari Hindi', 'Noto Sans Devanagari', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 6px 24px -8px rgba(0,0,0,0.15)',
+            pop: '0 12px 30px -10px rgba(180,83,9,0.35)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Forum&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Forum', 'Poppins', system-ui, serif;
+      background: #fffbf2;
+    }
+
+    [lang-hi] {
+      font-family: 'Tiro Devanagari Hindi', 'Noto Sans Devanagari', sans-serif;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #f59e0b;
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .6s ease-out;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="text-ink-900">
+
+  <!-- ============ TOP NOTICE BAR ============ -->
+  <div class="bg-saffron-500 text-white text-sm py-2 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 text-center font-medium">
+      <span data-i18n="notice.line">📣 Admissions Open for Academic Session 2026–27 | Contact School Office</span>
+    </div>
+  </div>
+
+  <!-- ============ HEADER / NAV ============ -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-soft">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3">
+          <img src="Bhardwaj-logo-light.png" alt="Bhardwaj Gurukul Logo" class="w-full h-16 " />
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold">
+          <a href="index.html" class="hover:text-saffron-600" data-i18n="nav.home">Home</a>
+          <a href="about.html" class="hover:text-saffron-600" data-i18n="nav.about">About</a>
+          <a href="facilities.html" class="hover:text-saffron-600" data-i18n="nav.facilities">Facilities</a>
+          <a href="index.html#achievers" class="hover:text-saffron-600" data-i18n="nav.achievers">Achievers</a>
+          <a href="index.html#gallery" class="hover:text-saffron-600" data-i18n="nav.gallery">Gallery</a>
+          <a href="index.html#admissions" class="hover:text-saffron-600" data-i18n="nav.admissions">Admissions</a>
+          <a href="notices.html" class="hover:text-saffron-600" data-i18n="nav.notices">Notices</a>
+          <a href="contact.html" class="text-saffron-600 border-b-2 border-saffron-500 pb-1" data-i18n="nav.contact">Contact</a>
+        </nav>
+
+        <!-- Right cluster -->
+        <div class="flex items-center gap-2 md:gap-3">
+          <!-- Language Toggle -->
+          <button id="langToggle" aria-label="Switch language"
+            class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-leaf-50 text-leaf-800 border-2 border-leaf-500 hover:bg-leaf-500 hover:text-white text-xs md:text-sm font-bold transition">
+            <i data-lucide="languages" class="w-4 h-4"></i>
+            <span id="langLabel">हिं</span>
+          </button>
+
+          <!-- Call CTA -->
+          <a href="tel:9934220425"
+            class="hidden sm:inline-flex items-center gap-2 bg-crimson-600 hover:bg-crimson-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-pop">
+            <i data-lucide="phone-call" class="w-4 h-4"></i>
+            <span data-i18n="cta.call">Call Now</span>
+          </a>
+
+          <!-- Mobile menu toggle -->
+          <button id="menuToggle" class="lg:hidden p-2 rounded-lg hover:bg-saffron-50" aria-label="Open menu">
+            <i data-lucide="menu" class="w-6 h-6 text-leaf-800"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden lg:hidden border-t border-saffron-100 bg-white">
+      <nav class="px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
+        <a href="index.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.home">Home</a>
+        <a href="about.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.about">About</a>
+        <a href="facilities.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.facilities">Facilities</a>
+        <a href="index.html#achievers" class="px-3 py-2 rounded-lg bg-leaf-50" data-i18n="nav.achievers">Achievers</a>
+        <a href="index.html#gallery" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.gallery">Gallery</a>
+        <a href="index.html#admissions" class="px-3 py-2 rounded-lg bg-leaf-50" data-i18n="nav.admissions">Admissions</a>
+        <a href="notices.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.notices">Notices</a>
+        <a href="contact.html" class="px-3 py-2 rounded-lg bg-leaf-500 text-white" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="relative bg-gradient-to-br from-leaf-800 to-leaf-950 text-white py-16 md:py-24 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <span class="bg-saffron-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="hero.tagline">Friendly & Welcoming Community</span>
+      <h1 class="text-4xl md:text-6xl font-extrabold mt-4" data-i18n="hero.title">Get In Touch</h1>
+      <p class="text-white/80 mt-4 max-w-2xl mx-auto text-base md:text-lg" data-i18n="hero.subtitle">
+        Reach our administrative desk, explore campus locations, read neighborhood highlights, and submit direct admission questions.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT INFORMATION ============ -->
+  <section class="py-14 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-8 items-start">
+      
+      <!-- Contact Cards -->
+      <div class="lg:col-span-1 space-y-5 reveal">
+        <h2 class="text-2xl font-extrabold text-leaf-800 border-b border-saffron-100 pb-3 mb-4" data-i18n="ct.title">Contact Details</h2>
+        
+        <!-- Address Card -->
+        <div class="bg-white rounded-3xl p-5 shadow-soft border border-saffron-50 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-leaf-100 text-leaf-700 grid place-items-center shrink-0">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="font-bold text-ink-900" data-i18n="ct.addrTitle">School Address</div>
+            <div class="text-sm text-ink-700 mt-1" data-i18n="ct.addrBody">Panhas, Begusarai, Bihar – 851218 (1 km north of Begusarai railway station and bus stand, near Bazaar Samiti)</div>
+          </div>
+        </div>
+
+        <!-- Phone Card -->
+        <div class="bg-white rounded-3xl p-5 shadow-soft border border-saffron-50 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-saffron-100 text-saffron-700 grid place-items-center shrink-0">
+            <i data-lucide="phone" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="font-bold text-ink-900" data-i18n="ct.phoneTitle">Mobile & Telephone</div>
+            <div class="text-sm text-ink-700 mt-1">
+              9934220425 • 9334022848<br />
+              <span class="text-xs text-ink-600 font-semibold" data-i18n="ct.phoneAlt">Landline: 9973766851</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email Card -->
+        <div class="bg-white rounded-3xl p-5 shadow-soft border border-saffron-50 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-crimson-100 text-crimson-600 grid place-items-center shrink-0">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="font-bold text-ink-900" data-i18n="ct.emailTitle">Email Address</div>
+            <div class="text-sm text-ink-700 mt-1 select-all">bhardwajgurukulbgs@gmail.com</div>
+          </div>
+        </div>
+
+        <!-- Office hours Card -->
+        <div class="bg-white rounded-3xl p-5 shadow-soft border border-saffron-50 flex items-start gap-4">
+          <div class="w-10 h-10 rounded-xl bg-leaf-100 text-leaf-700 grid place-items-center shrink-0">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="font-bold text-ink-900" data-i18n="ct.hoursTitle">Office & Visiting Hours</div>
+            <div class="text-sm text-ink-700 mt-1" data-i18n="ct.hoursBody">Monday to Sunday: 9:00 AM – 5:00 PM (Visiting & Phone timings: Sunday)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Communication Buttons Panel -->
+      <div class="lg:col-span-2 reveal">
+        <div class="bg-gradient-to-br from-saffron-50/50 via-white to-leaf-50/50 rounded-3xl p-6 md:p-8 shadow-soft border border-saffron-100">
+          <h2 class="text-2xl font-extrabold text-leaf-800 mb-2" data-i18n="connect.title">Quick Connect Options</h2>
+          <p class="text-xs md:text-sm text-ink-700 mb-8" data-i18n="connect.sub">Select your preferred way to reach out. Click any card below to connect directly with the Gurukul administration.</p>
+          
+          <div class="grid sm:grid-cols-2 gap-4">
+            <!-- Call Button Card -->
+            <a href="tel:9934220425"
+              class="bg-white rounded-2xl p-5 shadow-soft hover:shadow-pop border-b-4 border-crimson-500 hover:-translate-y-1 transition group flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-crimson-100 text-crimson-600 grid place-items-center group-hover:bg-crimson-600 group-hover:text-white transition shrink-0">
+                <i data-lucide="phone" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <div class="font-bold text-ink-900 text-base" data-i18n="connect.call">Call Administration</div>
+                <div class="text-xs text-ink-700 mt-0.5" data-i18n="connect.callSub">Call 9934220425</div>
+              </div>
+            </a>
+            
+            <!-- WhatsApp Button Card -->
+            <a href="https://wa.me/919934220425?text=Hello%20Bhardwaj%20Gurukul" target="_blank" rel="noopener"
+              class="bg-white rounded-2xl p-5 shadow-soft hover:shadow-pop border-b-4 border-leaf-500 hover:-translate-y-1 transition group flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-leaf-100 text-leaf-700 grid place-items-center group-hover:bg-leaf-500 group-hover:text-white transition shrink-0">
+                <i data-lucide="message-square" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <div class="font-bold text-ink-900 text-base" data-i18n="connect.wa">WhatsApp Chat</div>
+                <div class="text-xs text-ink-700 mt-0.5" data-i18n="connect.waSub">Chat with us instantly</div>
+              </div>
+            </a>
+            
+            <!-- Message / SMS Button Card -->
+            <a href="sms:9934220425"
+              class="bg-white rounded-2xl p-5 shadow-soft hover:shadow-pop border-b-4 border-saffron-500 hover:-translate-y-1 transition group flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-saffron-100 text-saffron-700 grid place-items-center group-hover:bg-saffron-500 group-hover:text-white transition shrink-0">
+                <i data-lucide="message-circle" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <div class="font-bold text-ink-900 text-base" data-i18n="connect.sms">Send SMS Message</div>
+                <div class="text-xs text-ink-700 mt-0.5" data-i18n="connect.smsSub">Text us directly</div>
+              </div>
+            </a>
+            
+            <!-- Mail Button Card -->
+            <a href="mailto:bhardwajgurukulbgs@gmail.com"
+              class="bg-white rounded-2xl p-5 shadow-soft hover:shadow-pop border-b-4 border-crimson-500 hover:-translate-y-1 transition group flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-crimson-100 text-crimson-600 grid place-items-center group-hover:bg-crimson-600 group-hover:text-white transition shrink-0">
+                <i data-lucide="mail" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <div class="font-bold text-ink-900 text-base" data-i18n="connect.mail">Send Email</div>
+                <div class="text-xs text-ink-700 mt-0.5" data-i18n="connect.mailSub">Write to our support mail</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOCATION HIGHLIGHTS ============ -->
+  <section class="py-14 md:py-20 bg-gradient-to-br from-saffron-50/50 via-white to-leaf-50/50 border-t border-saffron-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-center">
+      <div class="reveal">
+        <span class="bg-saffron-100 text-saffron-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="loc.kicker">School Location Context</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-leaf-800" data-i18n="loc.title">A Serene and Open Neighborhood</h2>
+        <div class="mt-4 space-y-4 text-ink-700 leading-relaxed text-sm md:text-base">
+          <p data-i18n="loc.p1">
+            Bhardwaj Gurukul is located off State Highway 55 (connecting Begusarai and Rosera), in a clean, congestion-free environment.
+          </p>
+          <p data-i18n="loc.p2">
+            The school sits in an open administrative neighborhood. Sprawling premises of the Police Line, the ITI, and residences of key officials like the District Magistrate, the S.P., and the District Judge are nearby.
+          </p>
+          
+          <!-- Tagline checkboxes -->
+          <div class="pt-4 grid grid-cols-2 gap-2 text-xs font-semibold text-leaf-800">
+            <div class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-saffron-500"></i><span data-i18n="tag.t1">A modern Gurukul</span></div>
+            <div class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-saffron-500"></i><span data-i18n="tag.t2">Midst of nature</span></div>
+            <div class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-saffron-500"></i><span data-i18n="tag.t3">First-class hostels</span></div>
+            <div class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-saffron-500"></i><span data-i18n="tag.t4">Safe campus</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Administrative tags / metadata -->
+      <div class="reveal bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-saffron-50">
+        <h3 class="font-extrabold text-leaf-800 border-b border-saffron-100 pb-3 mb-4 flex items-center gap-2">
+          <i data-lucide="bookmark" class="w-5 h-5 text-saffron-500"></i>
+          <span data-i18n="ft.legal">Recognition & Credentials</span>
+        </h3>
+        <ul class="space-y-3.5 text-sm md:text-base text-ink-800">
+          <li class="flex justify-between font-semibold"><span data-i18n="meta.trustName">Trust Name</span> <span class="text-leaf-700 text-right">Bhardwaj Educational & Charitable Trust</span></li>
+          <li class="flex justify-between font-semibold"><span data-i18n="meta.udise">UDISE Code</span> <span class="text-leaf-700 text-right">10201002702</span></li>
+          <li class="flex justify-between font-semibold"><span data-i18n="meta.rec">Recognition Code</span> <span class="text-leaf-700 text-right">2221314202918094524, 2022</span></li>
+          <li class="flex justify-between font-semibold"><span data-i18n="meta.est">Established</span> <span class="text-leaf-700 text-right">Since 2005</span></li>
+          <li class="flex justify-between font-semibold"><span data-i18n="meta.motto">School Motto</span> <span class="text-leaf-700 text-right">Perfection Through Practice</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INTERACTIVE MAP ============ -->
+  <section class="py-14 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="rounded-3xl overflow-hidden shadow-pop border-4 border-white/10 max-w-5xl mx-auto reveal">
+        <iframe src="https://www.google.com/maps?q=Begusarai%20Railway%20Station&output=embed" width="100%"
+          height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Bhardwaj Gurukul Location Reference Map">
+        </iframe>
+      </div>
+      <div class="mt-4 text-xs text-ink-700 text-center max-w-lg mx-auto" data-i18n="ct.mapNote">
+        *Map centered on Begusarai Railway Station for convenience. The school campus is located 1 km north of the station.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-ink-900 text-white/80 pt-10 pb-24 md:pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-3">
+          <img src="Bhardwaj-logo.png" alt="Bhardwaj Gurukul Logo" class="w-fit h-24" />
+        </div>
+        <p class="text-sm" data-i18n="ft.about">A commitment toward excellence in the residential system of education, since 2005.</p>
+        <div class="flex gap-3 mt-4">
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+          <a href="#" aria-label="YouTube" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="font-bold text-white mb-3" data-i18n="ft.links">Quick Links</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-saffron-500" data-i18n="nav.home">Home</a></li>
+          <li><a href="about.html" class="hover:text-saffron-500" data-i18n="nav.about">About</a></li>
+          <li><a href="facilities.html" class="hover:text-saffron-500" data-i18n="nav.facilities">Facilities</a></li>
+          <li><a href="index.html#achievers" class="hover:text-saffron-500" data-i18n="nav.achievers">Achievers</a></li>
+          <li><a href="contact.html" class="hover:text-saffron-500" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-bold text-white mb-3" data-i18n="ft.legal">Recognition</div>
+        <ul class="space-y-2 text-sm">
+          <li>UDISE: 10201002702</li>
+          <li>Recognition: 2221314202918094524</li>
+          <li data-i18n="ft.trust">Bhardwaj Educational & Charitable Trust</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-white/10 text-xs flex flex-col md:flex-row items-center justify-between gap-2">
+      <div data-i18n="ft.copy">© 2026 Bhardwaj Gurukul. All rights reserved.</div>
+      <div class="opacity-70" data-i18n="ft.motto">Perfection Through Practice • अप्यो दीप्तो भव्</div>
+    </div>
+  </footer>
+
+  <!-- ============ FLOATING QUICK-CONTACT BAR (Mobile-First) ============ -->
+  <div class="fixed bottom-0 inset-x-0 z-50 md:bottom-6 md:right-6 md:left-auto md:w-auto">
+    <div class="bg-white/95 backdrop-blur border-t-2 md:border-2 border-saffron-50 md:rounded-full shadow-pop flex md:gap-1 divide-x divide-saffron-100">
+      <a href="tel:9934220425" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-crimson-600 hover:bg-crimson-50">
+        <i data-lucide="phone" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.call">Call</span>
+      </a>
+      <a href="https://wa.me/919934220425" target="_blank" rel="noopener" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-leaf-700 hover:bg-leaf-50">
+        <i data-lucide="message-circle" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.wa">WhatsApp</span>
+      </a>
+      <a href="mailto:bhardwajgurukulbgs@gmail.com" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-saffron-600 hover:bg-saffron-50">
+        <i data-lucide="mail" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.mail">Email</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== TRANSLATION DICTIONARY ====== -->
+  <script>
+    const i18n = {
+      en: {
+        "meta.title": "Contact Us — Bhardwaj Gurukul, Begusarai",
+        "meta.description": "Contact Bhardwaj Gurukul Begusarai. Get address, phone, email, map directions, and submit admission inquiries.",
+        "notice.line": "📣 Admissions Open for Academic Session 2026–27 | Contact School Office",
+        "nav.home": "Home",
+        "nav.about": "About",
+        "nav.facilities": "Facilities",
+        "nav.achievers": "Achievers",
+        "nav.gallery": "Gallery",
+        "nav.admissions": "Admissions",
+        "nav.notices": "Notices",
+        "nav.contact": "Contact",
+        "cta.call": "Call Now",
+        "hero.tagline": "Friendly & Welcoming Community",
+        "hero.title": "Get In Touch",
+        "hero.subtitle": "Reach our administrative desk, explore campus locations, read neighborhood highlights, and submit direct admission questions.",
+        "ct.title": "Contact Details",
+        "ct.addrTitle": "School Address",
+        "ct.addrBody": "Panhas, Begusarai, Bihar – 851218 (1 km north of Begusarai railway station and bus stand, near Bazaar Samiti)",
+        "ct.phoneTitle": "Mobile & Telephone",
+        "ct.phoneAlt": "Landline: 9973766851",
+        "ct.emailTitle": "Email Address",
+        "ct.hoursTitle": "Office & Visiting Hours",
+        "ct.hoursBody": "Monday to Sunday: 9:00 AM – 5:00 PM (Visiting & Phone timings: Sunday)",
+        "connect.title": "Quick Connect Options",
+        "connect.sub": "Select your preferred way to reach out. Click any card below to connect directly with the Gurukul administration.",
+        "connect.call": "Call Administration",
+        "connect.callSub": "Call 9934220425",
+        "connect.wa": "WhatsApp Chat",
+        "connect.waSub": "Chat with us instantly",
+        "connect.sms": "Send SMS Message",
+        "connect.smsSub": "Text us directly",
+        "connect.mail": "Send Email",
+        "connect.mailSub": "Write to our support mail",
+        "loc.kicker": "School Location Context",
+        "loc.title": "A Serene and Open Neighborhood",
+        "loc.p1": "Bhardwaj Gurukul is located off State Highway 55 (connecting Begusarai and Rosera), in a clean, congestion-free environment.",
+        "loc.p2": "The school sits in an open administrative neighborhood. Sprawling premises of the Police Line, the ITI, and residences of key officials like the District Magistrate, the S.P., and the District Judge are nearby.",
+        "tag.t1": "A modern Gurukul",
+        "tag.t2": "Midst of nature",
+        "tag.t3": "First-class hostels",
+        "tag.t4": "Safe campus",
+        "ft.legal": "Recognition & Credentials",
+        "meta.trustName": "Trust Name",
+        "meta.udise": "UDISE Code",
+        "meta.rec": "Recognition Code",
+        "meta.est": "Established",
+        "meta.motto": "School Motto",
+        "ct.mapNote": "*Map centered on Begusarai Railway Station for convenience. The school campus is located 1 km north of the station.",
+        "ft.about": "A commitment toward excellence in the residential system of education, since 2005.",
+        "ft.links": "Quick Links",
+        "ft.legal": "Recognition",
+        "ft.trust": "Bhardwaj Educational & Charitable Trust",
+        "ft.copy": "© 2026 Bhardwaj Gurukul. All rights reserved.",
+        "ft.motto": "Perfection Through Practice • अप्यो दीप्तो भव्",
+        "float.call": "Call",
+        "float.wa": "WhatsApp",
+        "float.mail": "Email"
+      },
+      hi: {
+        "meta.title": "संपर्क करें — भारद्वाज गुरुकुल, बेगूसराय",
+        "meta.description": "भारद्वाज गुरुकुल बेगूसराय से संपर्क करें। पता, फोन, ईमेल, मानचित्र और प्रवेश पूछताछ फॉर्म प्राप्त करें।",
+        "notice.line": "📣 शैक्षणिक सत्र 2026–27 हेतु प्रवेश खुले हैं | स्कूल कार्यालय से संपर्क करें",
+        "nav.home": "मुख्य",
+        "nav.about": "परिचय",
+        "nav.facilities": "सुविधाएँ",
+        "nav.achievers": "उपलब्धियाँ",
+        "nav.gallery": "गैलरी",
+        "nav.admissions": "प्रवेश",
+        "nav.notices": "सूचनाएँ",
+        "nav.contact": "संपर्क",
+        "cta.call": "अभी कॉल करें",
+        "hero.tagline": "अनुकूल और स्वागत करने वाला समुदाय",
+        "hero.title": "हमसे संपर्क करें",
+        "hero.subtitle": "हमारे प्रशासनिक डेस्क तक पहुँचें, परिसर के स्थान का पता लगाएं और अपनी प्रवेश संबंधी पूछताछ सीधे भेजें।",
+        "ct.title": "संपर्क विवरण",
+        "ct.addrTitle": "विद्यालय का पता",
+        "ct.addrBody": "पनहास, बेगूसराय, बिहार – 851218 (बेगूसराय रेलवे स्टेशन और बस स्टैंड से 1 किमी उत्तर, बाज़ार समिति के निकट)",
+        "ct.phoneTitle": "मोबाइल और टेलीफोन",
+        "ct.phoneAlt": "लैंडलाइन: 9973766851",
+        "ct.emailTitle": "ईमेल पता",
+        "ct.hoursTitle": "कार्यालय एवं विज़िट का समय",
+        "ct.hoursBody": "सोमवार से रविवार: सुबह 9:00 - शाम 5:00 (अभिभावक विज़िट एवं फोन समय: रविवार)",
+        "connect.title": "त्वरित संपर्क विकल्प",
+        "connect.sub": "हमसे संपर्क करने के लिए अपना पसंदीदा तरीका चुनें। गुरुकुल प्रशासन से सीधे जुड़ने के लिए नीचे दिए गए किसी भी कार्ड पर क्लिक करें।",
+        "connect.call": "प्रशासन को कॉल करें",
+        "connect.callSub": "कॉल करें: 9934220425",
+        "connect.wa": "व्हाट्सएप चैट",
+        "connect.waSub": "तुरंत हमसे चैट करें",
+        "connect.sms": "एसएमएस संदेश भेजें",
+        "connect.smsSub": "हमें सीधे संदेश भेजें",
+        "connect.mail": "ईमेल भेजें",
+        "connect.mailSub": "हमारे सहायता ईमेल पर लिखें",
+        "loc.kicker": "स्कूल स्थान संदर्भ",
+        "loc.title": "एक शांत और खुला पड़ोस",
+        "loc.p1": "भारद्वाज गुरुकुल राज्य राजमार्ग 55 (बेगूसराय और रोसड़ा को जोड़ने वाला) से हटकर, एक स्वच्छ, भीड़भाड़ रहित वातावरण में स्थित है।",
+        "loc.p2": "स्कूल एक खुले प्रशासनिक पड़ोस में स्थित है। पुलिस लाइन, आईटीआई का विशाल परिसर और जिला मजिस्ट्रेट, एसपी और जिला न्यायाधीश जैसे महत्वपूर्ण जिला अधिकारियों के आवास पास में ही हैं।",
+        "tag.t1": "एक आधुनिक गुरुकुल",
+        "tag.t2": "प्रकृति के बीच",
+        "tag.t3": "प्रथम श्रेणी छात्रावास",
+        "tag.t4": "सुरक्षित परिसर",
+        "ft.legal": "मान्यता और साख",
+        "meta.trustName": "ट्रस्ट का नाम",
+        "meta.udise": "यूडीआईएसई (UDISE) कोड",
+        "meta.rec": "मान्यता कोड",
+        "meta.est": "स्थापना",
+        "meta.motto": "स्कूल का ध्येय",
+        "ct.mapNote": "*सुविधा के लिए मानचित्र बेगूसराय रेलवे स्टेशन पर केंद्रित है। स्कूल परिसर स्टेशन से 1 किमी उत्तर में स्थित है।",
+        "ft.about": "आवासीय शिक्षा प्रणाली में उत्कृष्टता के प्रति समर्पित, 2005 से।",
+        "ft.links": "त्वरित लिंक",
+        "ft.legal": "मान्यता",
+        "ft.trust": "भारद्वाज एजुकेशनल एंड चैरिटेबल ट्रस्ट",
+        "ft.copy": "© 2026 भारद्वाज गुरुकुल. सर्वाधिकार सुरक्षित.",
+        "ft.motto": "अभ्यास से पूर्णता • अप्यो दीप्तो भव्",
+        "float.call": "कॉल",
+        "float.wa": "व्हाट्सएप",
+        "float.mail": "ईमेल"
+      }
+    };
+
+    function renderIcons() { if (window.lucide) lucide.createIcons(); }
+
+    function applyLang(lang) {
+      const dict = i18n[lang] || i18n.en;
+      document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          if (/[<>]/.test(dict[key])) el.innerHTML = dict[key];
+          else el.textContent = dict[key];
+        }
+      });
+
+      document.body.classList.toggle('font-deva', lang === 'hi');
+      document.getElementById('langLabel').textContent = lang === 'hi' ? 'EN' : 'हिं';
+      try { localStorage.setItem('bg_lang', lang); } catch (e) {}
+      renderIcons();
+    }
+
+    // Form Submission Handling
+    function submitInquiry(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('formName').value.trim();
+      const phone = document.getElementById('formPhone').value.trim();
+      const prefClass = document.getElementById('formClass').value;
+      const message = document.getElementById('formMessage').value.trim();
+
+      if (name && phone && prefClass && message) {
+        // Hide form inputs, show success notification
+        document.getElementById('inquiryForm').classList.add('hidden');
+        document.getElementById('formSuccess').classList.remove('hidden');
+        
+        // Log locally
+        console.log("Inquiry Submitted:", { name, phone, prefClass, message });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderIcons();
+      let saved = 'en';
+      try { saved = localStorage.getItem('bg_lang') || 'en'; } catch (e) {}
+      applyLang(saved);
+
+      document.getElementById('langToggle').addEventListener('click', () => {
+        const current = localStorage.getItem('bg_lang') || 'en';
+        applyLang(current === 'en' ? 'hi' : 'en');
+      });
+
+      const menuBtn = document.getElementById('menuToggle');
+      const menu = document.getElementById('mobileMenu');
+      menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+      // Reveal-on-scroll
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="meta.title">About Us — Bhardwaj Gurukul, Begusarai</title>
+  <meta name="description" data-i18n="meta.description"
+    content="Learn about Bhardwaj Gurukul's history, mission, Chairman's message, and discipline/leave rules for residential students." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saffron: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+            leaf: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534' },
+            crimson: { 50: '#fef2f2', 100: '#fee2e2', 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c' },
+            ink: { 900: '#1c1917', 800: '#292524', 700: '#44403c' },
+            paper: '#fffbf2'
+          },
+          fontFamily: {
+            sans: ['Forum', 'Poppins', 'Inter', 'system-ui', 'serif'],
+            deva: ['Tiro Devanagari Hindi', 'Noto Sans Devanagari', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 6px 24px -8px rgba(0,0,0,0.15)',
+            pop: '0 12px 30px -10px rgba(180,83,9,0.35)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Forum&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Forum', 'Poppins', system-ui, serif;
+      background: #fffbf2;
+    }
+
+    [lang-hi] {
+      font-family: 'Tiro Devanagari Hindi', 'Noto Sans Devanagari', sans-serif;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #f59e0b;
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .6s ease-out;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body class="text-ink-900">
+
+  <!-- ============ TOP NOTICE BAR ============ -->
+  <div class="bg-saffron-500 text-white text-sm py-2 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 text-center font-medium">
+      <span data-i18n="notice.line">📣 Admissions Open for Academic Session 2026–27 | Contact School Office</span>
+    </div>
+  </div>
+
+  <!-- ============ HEADER / NAV ============ -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-soft">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3">
+          <img src="Bhardwaj-logo-light.png" alt="Bhardwaj Gurukul Logo" class="w-full h-16 " />
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold">
+          <a href="index.html" class="hover:text-saffron-600" data-i18n="nav.home">Home</a>
+          <a href="about.html" class="text-saffron-600 border-b-2 border-saffron-500 pb-1" data-i18n="nav.about">About</a>
+          <a href="facilities.html" class="hover:text-saffron-600" data-i18n="nav.facilities">Facilities</a>
+          <a href="index.html#achievers" class="hover:text-saffron-600" data-i18n="nav.achievers">Achievers</a>
+          <a href="index.html#gallery" class="hover:text-saffron-600" data-i18n="nav.gallery">Gallery</a>
+          <a href="index.html#admissions" class="hover:text-saffron-600" data-i18n="nav.admissions">Admissions</a>
+          <a href="notices.html" class="hover:text-saffron-600" data-i18n="nav.notices">Notices</a>
+          <a href="contact.html" class="hover:text-saffron-600" data-i18n="nav.contact">Contact</a>
+        </nav>
+
+        <!-- Right cluster -->
+        <div class="flex items-center gap-2 md:gap-3">
+          <!-- Language Toggle -->
+          <button id="langToggle" aria-label="Switch language"
+            class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-leaf-50 text-leaf-800 border-2 border-leaf-500 hover:bg-leaf-500 hover:text-white text-xs md:text-sm font-bold transition">
+            <i data-lucide="languages" class="w-4 h-4"></i>
+            <span id="langLabel">हिं</span>
+          </button>
+
+          <!-- Call CTA -->
+          <a href="tel:9934220425"
+            class="hidden sm:inline-flex items-center gap-2 bg-crimson-600 hover:bg-crimson-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-pop">
+            <i data-lucide="phone-call" class="w-4 h-4"></i>
+            <span data-i18n="cta.call">Call Now</span>
+          </a>
+
+          <!-- Mobile menu toggle -->
+          <button id="menuToggle" class="lg:hidden p-2 rounded-lg hover:bg-saffron-50" aria-label="Open menu">
+            <i data-lucide="menu" class="w-6 h-6 text-leaf-800"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden lg:hidden border-t border-saffron-100 bg-white">
+      <nav class="px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
+        <a href="index.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.home">Home</a>
+        <a href="about.html" class="px-3 py-2 rounded-lg bg-leaf-500 text-white" data-i18n="nav.about">About</a>
+        <a href="facilities.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.facilities">Facilities</a>
+        <a href="index.html#achievers" class="px-3 py-2 rounded-lg bg-leaf-50" data-i18n="nav.achievers">Achievers</a>
+        <a href="index.html#gallery" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.gallery">Gallery</a>
+        <a href="index.html#admissions" class="px-3 py-2 rounded-lg bg-leaf-50" data-i18n="nav.admissions">Admissions</a>
+        <a href="notices.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.notices">Notices</a>
+        <a href="contact.html" class="px-3 py-2 rounded-lg bg-leaf-50 col-span-2" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="relative bg-gradient-to-br from-leaf-800 to-leaf-950 text-white py-16 md:py-24 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <span class="bg-saffron-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="hero.tagline">Perfection Through Practice</span>
+      <h1 class="text-4xl md:text-6xl font-extrabold mt-4" data-i18n="hero.title">About Bhardwaj Gurukul</h1>
+      <p class="text-white/80 mt-4 max-w-2xl mx-auto text-base md:text-lg" data-i18n="hero.subtitle">
+        Nurturing values, character, and academic excellence in a modern residential environment since 2005.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ RESIDENTIAL SYSTEM ============ -->
+  <section class="py-14 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-center">
+      <div class="reveal">
+        <span class="text-saffron-600 font-bold uppercase tracking-wider text-xs md:text-sm" data-i18n="res.kicker">Our Educational Model</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-2 text-leaf-800" data-i18n="res.title">Residential System of Education</h2>
+        <div class="mt-4 space-y-4 text-ink-700 leading-relaxed text-sm md:text-base">
+          <p data-i18n="res.p1">
+            Bhardwaj Gurukul stands as a commitment toward excellence in the residential system of education, nestled in a naturally serene atmosphere near Bazaar Samiti, Panhas, Begusarai.
+          </p>
+          <p data-i18n="res.p2">
+            Boarders are provided spacious, well-ventilated dormitories where all basic requirements are taken care of from dawn to dusk. We prioritize health and hygiene, serving balanced, nutritious, and sumptuous meals daily.
+          </p>
+          <p data-i18n="res.p3">
+            To build physical and mental fitness, meditation, regular exercise, games, sports, and designated TV hours are integrated into the specially designed daily schedule. Spoken English and grammar are emphasizing daily classes.
+          </p>
+        </div>
+      </div>
+      <div class="reveal relative">
+        <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=900&q=80"
+          alt="Gurukul Education System" class="rounded-3xl shadow-pop w-full h-80 object-cover" />
+        <div class="absolute -bottom-6 -right-4 bg-saffron-500 text-white rounded-2xl p-4 shadow-pop">
+          <div class="font-bold text-center text-lg" data-i18n="res.badgeTitle">Modern Gurukul</div>
+          <div class="text-xs text-white/90 text-center" data-i18n="res.badgeSub">Rooted in Indian Values</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHAIRMAN'S MESSAGE ============ -->
+  <section class="py-14 md:py-20 bg-gradient-to-br from-saffron-50/50 via-white to-leaf-50/50 border-t border-b border-saffron-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 reveal">
+        <span class="bg-saffron-100 text-saffron-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="msg.kicker">Leadership Message</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-leaf-800" data-i18n="msg.title">Chairman's Message</h2>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-soft border border-saffron-100 reveal">
+        <div class="flex items-start gap-4 mb-6">
+          <i data-lucide="quote" class="w-10 h-10 text-saffron-500 shrink-0"></i>
+          <div>
+            <p class="italic text-ink-800 text-base md:text-lg leading-relaxed mb-4" data-i18n="msg.p1">
+              "We started our school Bhardwaj Gurukul keeping in view the educational development, health improvement and inculcating sanskar/values among the students. Making the dream of Rabindranath Tagore come true, we created a garden by plantation across 150,000 square feet and run the school in a green, healthy environment..."
+            </p>
+            <p class="italic text-ink-800 text-base md:text-lg leading-relaxed mb-4" data-i18n="msg.p2">
+              "I am a true believer that education with a value system has no boundary. Inculcating Sanskar/values is more important. Nowadays, our young generation is being influenced by western culture spread through mobile phones, TV, and cinema. Education is easily available in most schools, whereas not much attention is paid to character building (Sanskar). Our school provides all exposure and guidance for character building like the Gurukuls of ancient times. I am personally involved in these activities and closely monitor them."
+            </p>
+            <p class="italic text-ink-800 text-base md:text-lg leading-relaxed" data-i18n="msg.p3">
+              "I wish all the best to all students of our school, with a hope to produce the best future citizens of the nation. — Jai Hind"
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-6 border-t border-saffron-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="font-extrabold text-leaf-800 text-lg" data-i18n="msg.author">Mr. Jawahar Lal Bhardwaj</div>
+            <div class="text-xs text-ink-700 font-semibold" data-i18n="msg.authorTitle">Founder Chairman, Bhardwaj Educational & Charitable Trust</div>
+            <div class="text-xs text-ink-600 mt-0.5" data-i18n="msg.authorCreds">Ex–Vice-Chairman, Nagar Parishad, Begusarai</div>
+          </div>
+          <div class="text-left md:text-right">
+            <div class="font-bold text-saffron-700 text-sm" data-i18n="msg.directorTitle">Founder Director</div>
+            <div class="text-ink-800 font-extrabold" data-i18n="msg.directorName">Mr. Shiv Prakash Bhardwaj</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RULES & REGULATIONS (TABS) ============ -->
+  <section class="py-14 md:py-20 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 reveal">
+        <span class="bg-crimson-100 text-crimson-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="rules.kicker">Rules & Regulations</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-leaf-800" data-i18n="rules.title">School Guidelines & Code of Conduct</h2>
+        <p class="text-ink-700 mt-2 text-sm md:text-base max-w-2xl mx-auto" data-i18n="rules.sub">
+          Essential rules for residential and day-boarding students to ensure a safe, structured, and disciplined learning environment.
+        </p>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="flex flex-wrap border-b border-saffron-200 gap-2 mb-8 justify-center reveal">
+        <button id="tabBtnDiscipline" onclick="switchTab('discipline')"
+          class="px-5 py-3 font-bold text-sm md:text-base text-leaf-800 border-b-4 border-leaf-700 outline-none transition">
+          ⚖️ <span data-i18n="tabs.discipline">Discipline Rules</span>
+        </button>
+        <button id="tabBtnParents" onclick="switchTab('parents')"
+          class="px-5 py-3 font-bold text-sm md:text-base text-ink-700 hover:text-leaf-800 border-b-4 border-transparent outline-none transition">
+          👨‍👩‍👧‍👦 <span data-i18n="tabs.parents">Request to Parents</span>
+        </button>
+        <button id="tabBtnLeave" onclick="switchTab('leave')"
+          class="px-5 py-3 font-bold text-sm md:text-base text-ink-700 hover:text-leaf-800 border-b-4 border-transparent outline-none transition">
+          🚪 <span data-i18n="tabs.leave">Leave & Removal</span>
+        </button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div class="reveal">
+        <!-- Discipline Rules Content -->
+        <div id="tabContentDiscipline" class="tab-content block bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-leaf-100">
+          <h3 class="text-xl font-extrabold text-leaf-800 mb-4 flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-5 h-5 text-saffron-500"></i>
+            <span data-i18n="disc.heading">Student Discipline & Conduct</span>
+          </h3>
+          <ol class="space-y-3.5 text-sm md:text-base text-ink-800 list-decimal pl-5">
+            <li data-i18n="disc.r1">Students must live and let live on campus, cultivating "Fatherhood of God and Brotherhood of Man."</li>
+            <li data-i18n="disc.r2">"Help ever and hurt never" must be translated into life.</li>
+            <li data-i18n="disc.r3">Students are not permitted to leave the campus without prior permission.</li>
+            <li data-i18n="disc.r4">Habitual neglect of studies, improper behaviour, immoral conduct, disrespect towards teachers, and irregular attendance will be sternly dealt with.</li>
+            <li data-i18n="disc.r5">Students should show due regard to schoolmates and obedience to teachers.</li>
+            <li data-i18n="disc.r6" class="font-semibold text-crimson-600">Use of cigarettes, tobacco, drugs, and alcohol attracts severe punishment.</li>
+            <li data-i18n="disc.r7" class="font-semibold text-crimson-600">Stealing and willful damage of property belonging to other students, teachers, or the school will result in immediate dismissal.</li>
+            <li data-i18n="disc.r8">Students are not allowed to bring or keep eatables (including pickles, ghee, medicines, tonics) or cash/valuables such as walkmans, mobile phones, cameras, etc. Such items will be confiscated and a fine of Rs. 250/- levied.</li>
+            <li data-i18n="disc.r9">Students should strictly obey all rules and regulations for classrooms, hostels, dining, and the campus.</li>
+            <li data-i18n="disc.r10" class="font-semibold text-leaf-700">Students must converse in English at all times on campus.</li>
+            <li data-i18n="disc.r11">"Courtesy begets courtesy" — use the words "Please" and "Thank you" in conversation.</li>
+            <li data-i18n="disc.r12">Students should have a high sense of responsibility in their studies.</li>
+            <li data-i18n="disc.r13">Double check that students are not allowed to keep a beard or moustache on campus.</li>
+          </ol>
+        </div>
+
+        <!-- Requests to Parents Content -->
+        <div id="tabContentParents" class="tab-content hidden bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-leaf-100">
+          <h3 class="text-xl font-extrabold text-leaf-800 mb-4 flex items-center gap-2">
+            <i data-lucide="users" class="w-5 h-5 text-saffron-500"></i>
+            <span data-i18n="parent.heading">Cooperation Requests for Parents</span>
+          </h3>
+          <ul class="space-y-3.5 text-sm md:text-base text-ink-800 pl-1">
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r1">Please keep in touch with the Director through correspondence or occasional visits, and cooperate to ensure the overall progress of your ward.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r2">Parents are requested not to speak ill of the institution or staff in front of their child — this can adversely affect the child's future.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r3">A disciplined child at home will be a disciplined child at school. Please do not harass your child at home; instead, encourage and instill confidence.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r4" class="font-semibold text-crimson-600">Please do not give or send money directly to your child.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r5">Students should be brought back to school before 5:00 PM on the day previous to reopening.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r6">The institution will not be responsible if a student leaves campus without the permission of the authorities.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r7">While your child is at home on vacation, encourage them to continue good practices acquired from school — getting up early, regular study, helping at home.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r8">On arrival, record details in the visitors' register, and wait at the parents' corner. Obtaining permission from the Director is required to meet any child other than your own. Entry into hostels is strictly prohibited. On working days, parents may not meet their wards.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="check-circle" class="w-5 h-5 text-leaf-600 shrink-0 mt-0.5"></i>
+              <span data-i18n="parent.r9">All parents are requested to cooperate with the administration for the smooth functioning of the institution.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Leave and Removal Content -->
+        <div id="tabContentLeave" class="tab-content hidden bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-leaf-100">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-xl font-extrabold text-leaf-800 mb-4 flex items-center gap-2">
+                <i data-lucide="calendar" class="w-5 h-5 text-saffron-500"></i>
+                <span data-i18n="leave.heading">Leave Rules</span>
+              </h3>
+              <p class="text-sm md:text-base text-ink-700 leading-relaxed" data-i18n="leave.body">
+                Parents should ensure that their ward returns to school on the due dates after vacation/holidays. Leave applications for extension will not be entertained. If a student is absent for 15 working days continuously without prior sanction, their name will be struck off the rolls without intimation.
+              </p>
+            </div>
+            <div class="bg-crimson-50/50 rounded-2xl p-5 border border-crimson-100">
+              <h3 class="text-lg font-extrabold text-crimson-800 mb-3 flex items-center gap-2">
+                <i data-lucide="user-x" class="w-5 h-5 text-crimson-600"></i>
+                <span data-i18n="removal.heading">Grounds for Removal</span>
+              </h3>
+              <ul class="space-y-2 text-sm md:text-base text-ink-800 font-semibold">
+                <li class="flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-crimson-600 shrink-0"></i><span data-i18n="removal.r1">Lack of discipline</span></li>
+                <li class="flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-crimson-600 shrink-0"></i><span data-i18n="removal.r2">Overaged students</span></li>
+                <li class="flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-crimson-600 shrink-0"></i><span data-i18n="removal.r3">Default of fees</span></li>
+                <li class="flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-crimson-600 shrink-0"></i><span data-i18n="removal.r4">Irregular attendance and long absence</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-ink-900 text-white/80 pt-10 pb-24 md:pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-3">
+          <img src="Bhardwaj-logo.png" alt="Bhardwaj Gurukul Logo" class="w-fit h-24" />
+        </div>
+        <p class="text-sm" data-i18n="ft.about">A commitment toward excellence in the residential system of education, since 2005.</p>
+        <div class="flex gap-3 mt-4">
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+          <a href="#" aria-label="YouTube" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="font-bold text-white mb-3" data-i18n="ft.links">Quick Links</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-saffron-500" data-i18n="nav.home">Home</a></li>
+          <li><a href="about.html" class="hover:text-saffron-500" data-i18n="nav.about">About</a></li>
+          <li><a href="facilities.html" class="hover:text-saffron-500" data-i18n="nav.facilities">Facilities</a></li>
+          <li><a href="index.html#achievers" class="hover:text-saffron-500" data-i18n="nav.achievers">Achievers</a></li>
+          <li><a href="contact.html" class="hover:text-saffron-500" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-bold text-white mb-3" data-i18n="ft.legal">Recognition</div>
+        <ul class="space-y-2 text-sm">
+          <li>UDISE: 10201002702</li>
+          <li>Recognition: 2221314202918094524</li>
+          <li data-i18n="ft.trust">Bhardwaj Educational & Charitable Trust</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-white/10 text-xs flex flex-col md:flex-row items-center justify-between gap-2">
+      <div data-i18n="ft.copy">© 2026 Bhardwaj Gurukul. All rights reserved.</div>
+      <div class="opacity-70" data-i18n="ft.motto">Perfection Through Practice • अप्यो दीप्तो भव्</div>
+    </div>
+  </footer>
+
+  <!-- ============ FLOATING QUICK-CONTACT BAR (Mobile-First) ============ -->
+  <div class="fixed bottom-0 inset-x-0 z-50 md:bottom-6 md:right-6 md:left-auto md:w-auto">
+    <div class="bg-white/95 backdrop-blur border-t-2 md:border-2 border-saffron-500 md:rounded-full shadow-pop flex md:gap-1 divide-x divide-saffron-100">
+      <a href="tel:9934220425" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-crimson-600 hover:bg-crimson-50">
+        <i data-lucide="phone" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.call">Call</span>
+      </a>
+      <a href="https://wa.me/919934220425" target="_blank" rel="noopener" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-leaf-700 hover:bg-leaf-50">
+        <i data-lucide="message-circle" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.wa">WhatsApp</span>
+      </a>
+      <a href="mailto:bhardwajgurukulbgs@gmail.com" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-saffron-600 hover:bg-saffron-50">
+        <i data-lucide="mail" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.mail">Email</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== TRANSLATION DICTIONARY ====== -->
+  <script>
+    const i18n = {
+      en: {
+        "meta.title": "About Us — Bhardwaj Gurukul, Begusarai",
+        "meta.description": "Learn about Bhardwaj Gurukul's history, mission, Chairman's message, and discipline/leave rules for residential students.",
+        "notice.line": "📣 Admissions Open for Academic Session 2026–27 | Contact School Office",
+        "nav.home": "Home",
+        "nav.about": "About",
+        "nav.facilities": "Facilities",
+        "nav.achievers": "Achievers",
+        "nav.gallery": "Gallery",
+        "nav.admissions": "Admissions",
+        "nav.notices": "Notices",
+        "nav.contact": "Contact",
+        "cta.call": "Call Now",
+        "hero.tagline": "Perfection Through Practice",
+        "hero.title": "About Bhardwaj Gurukul",
+        "hero.subtitle": "Nurturing values, character, and academic excellence in a modern residential environment since 2005.",
+        "res.kicker": "Our Educational Model",
+        "res.title": "Residential System of Education",
+        "res.p1": "Bhardwaj Gurukul stands as a commitment toward excellence in the residential system of education, nestled in a naturally serene atmosphere near Bazaar Samiti, Panhas, Begusarai.",
+        "res.p2": "Boarders are provided spacious, well-ventilated dormitories where all basic requirements are taken care of from dawn to dusk. We prioritize health and hygiene, serving balanced, nutritious, and sumptuous meals daily.",
+        "res.p3": "To build physical and mental fitness, meditation, regular exercise, games, sports, and designated TV hours are integrated into the specially designed daily schedule. Spoken English and grammar are emphasizing daily classes.",
+        "res.badgeTitle": "Modern Gurukul",
+        "res.badgeSub": "Rooted in Indian Values",
+        "msg.kicker": "Leadership Message",
+        "msg.title": "Chairman's Message",
+        "msg.p1": "“We started our school Bhardwaj Gurukul keeping in view the educational development, health improvement and inculcating sanskar/values among the students. Making the dream of Rabindranath Tagore come true, we created a garden by plantation across 150,000 square feet and run the school in a green, healthy environment. All students of Bhardwaj Gurukul are like God for us, especially our female students. They are treated and taught with great comfort, having all facilities for games/sports, special five-times healthy meals, and entertainment.”",
+        "msg.p2": "“I am a true believer that education with a value system has no boundary. Inculcating Sanskar/values is more important. Nowadays, our young generation is being influenced by western culture spread through mobile phones, TV, and cinema. Education is easily available in most schools, whereas not much attention is paid to character building (Sanskar). Our school provides all exposure and guidance for character building like the Gurukuls of ancient times. I am personally involved in these activities and closely monitor them.”",
+        "msg.p3": "“I wish all the best to all students of our school, with a hope to produce the best future citizens of the nation. — Jai Hind”",
+        "msg.author": "Mr. Jawahar Lal Bhardwaj",
+        "msg.authorTitle": "Founder Chairman, Bhardwaj Educational & Charitable Trust",
+        "msg.authorCreds": "Ex–Vice-Chairman, Nagar Parishad, Begusarai; Ex-Chairman, Shahpur Bahdarpur PACS",
+        "msg.directorTitle": "Founder Director",
+        "msg.directorName": "Mr. Shiv Prakash Bhardwaj",
+        "rules.kicker": "Rules & Regulations",
+        "rules.title": "School Guidelines & Code of Conduct",
+        "rules.sub": "Essential rules for residential and day-boarding students to ensure a safe, structured, and disciplined learning environment.",
+        "tabs.discipline": "Discipline Rules",
+        "tabs.parents": "Request to Parents",
+        "tabs.leave": "Leave & Removal",
+        "disc.heading": "Student Discipline & Conduct",
+        "disc.r1": "Students must live and let live on campus, cultivating \"Fatherhood of God and Brotherhood of Man.\"",
+        "disc.r2": "\"Help ever and hurt never\" must be translated into life.",
+        "disc.r3": "Students are not permitted to leave the campus without prior permission.",
+        "disc.r4": "Habitual neglect of studies, improper behaviour, immoral conduct, disrespect towards teachers, poor behaviour with fellow students, and irregular attendance will be sternly dealt with.",
+        "disc.r5": "Students should show due regard to schoolmates and obedience to teachers.",
+        "disc.r6": "Use of cigarettes, tobacco, drugs, and alcohol attracts severe punishment.",
+        "disc.r7": "Stealing and willful damage of property belonging to other students, teachers, or the school will result in immediate dismissal.",
+        "disc.r8": "Students are not allowed to bring or keep eatables (including pickles, ghee, medicines, tonics) or cash/valuables such as walkmans, tape recorders, mobile phones, cameras, etc. Such items will be confiscated and a fine of Rs. 250/- levied.",
+        "disc.r9": "Students should strictly obey all rules and regulations for classrooms, hostels, dining, and the campus in general.",
+        "disc.r10": "Students must converse in English at all times on campus.",
+        "disc.r11": "\"Courtesy begets courtesy\" — use the words \"Please\" and \"Thank you\" in conversation.",
+        "disc.r12": "Students should have a high sense of responsibility in their studies.",
+        "disc.r13": "Students are not allowed to keep a beard or moustache on campus.",
+        "parent.heading": "Cooperation Requests for Parents",
+        "parent.r1": "Please keep in touch with the Director through correspondence or occasional visits, and cooperate to ensure the overall progress of your ward.",
+        "parent.r2": "Parents are requested not to speak ill of the institution or staff in front of their child — this can adversely affect the child's future.",
+        "parent.r3": "A disciplined child at home will be a disciplined child at school. Please do not harass your child at home; instead, encourage and instill confidence in them.",
+        "parent.r4": "Please do not give or send money directly to your child.",
+        "parent.r5": "Students should be brought back to school before 5:00 PM on the day previous to reopening.",
+        "parent.r6": "The institution will not be responsible if a student leaves campus without the permission of the authorities.",
+        "parent.r7": "While your child is at home on vacation, encourage them to continue good practices acquired from school — getting up early, regular study, helping at home, etc.",
+        "parent.r8": "On arrival, record your name, address, and purpose in the visitors' register, and wait at the parents' corner. To meet any child other than your own ward, obtain permission from the Director. Entry into the hostel/dormitory is not allowed for visiting parents. On working days, parents may not meet their wards.",
+        "parent.r9": "All parents are requested to cooperate with the administration and staff in complying with these directions, for the smooth functioning of the institution and to help make their children worthy citizens of India.",
+        "leave.heading": "Leave Rules",
+        "leave.body": "Parents should ensure that their ward/wards return to school on the due dates after vacation/holidays. Leave applications for extension of vacation/holidays will not be entertained. If a student defaults or is absent for fifteen working days continuously without prior sanction, their name will be struck off the rolls without intimation.",
+        "removal.heading": "Grounds for Removal",
+        "removal.r1": "Lack of discipline",
+        "removal.r2": "Overaged students",
+        "removal.r3": "Default of fees",
+        "removal.r4": "Irregular attendance and long absence",
+        "ft.about": "A commitment toward excellence in the residential system of education, since 2005.",
+        "ft.links": "Quick Links",
+        "ft.legal": "Recognition",
+        "ft.trust": "Bhardwaj Educational & Charitable Trust",
+        "ft.copy": "© 2026 Bhardwaj Gurukul. All rights reserved.",
+        "ft.motto": "Perfection Through Practice • अप्यो दीप्तो भव्",
+        "float.call": "Call",
+        "float.wa": "WhatsApp",
+        "float.mail": "Email"
+      },
+      hi: {
+        "meta.title": "हमारे बारे में — भारद्वाज गुरुकुल, बेगूसराय",
+        "meta.description": "भारद्वाज गुरुकुल के इतिहास, मिशन, अध्यक्ष के संदेश और आवासीय छात्रों के अनुशासन/अवकाश नियमों के बारे में जानें।",
+        "notice.line": "📣 शैक्षणिक सत्र 2026–27 हेतु प्रवेश खुले हैं | स्कूल कार्यालय से संपर्क करें",
+        "nav.home": "मुख्य",
+        "nav.about": "परिचय",
+        "nav.facilities": "सुविधाएँ",
+        "nav.achievers": "उपलब्धियाँ",
+        "nav.gallery": "गैलरी",
+        "nav.admissions": "प्रवेश",
+        "nav.notices": "सूचनाएँ",
+        "nav.contact": "संपर्क",
+        "cta.call": "अभी कॉल करें",
+        "hero.tagline": "अभ्यास से पूर्णता",
+        "hero.title": "भारद्वाज गुरुकुल के बारे में",
+        "hero.subtitle": "2005 से एक आधुनिक आवासीय वातावरण में मूल्यों, चरित्र और शैक्षणिक उत्कृष्टता का विकास।",
+        "res.kicker": "हमारा शैक्षिक मॉडल",
+        "res.title": "आवासीय शिक्षा प्रणाली",
+        "res.p1": "भारद्वाज गुरुकुल, बाज़ार समिति के पास, पनहास, बेगूसराय में प्राकृतिक रूप से शांत वातावरण में स्थित है और यह आवासीय शिक्षा प्रणाली में उत्कृष्टता के प्रति समर्पित है।",
+        "res.p2": "छात्रावास में रहने वाले छात्रों को विशाल, हवादार शयनकक्ष प्रदान किए जाते हैं, जिसमें सुबह से लेकर रात तक की सभी बुनियादी आवश्यकताओं का ध्यान रखा जाता है। हम स्वास्थ्य और स्वच्छता को सर्वोच्च प्राथमिकता देते हैं और रोज़ाना संतुलित, पौष्टिक और स्वादिष्ट भोजन परोसा जाता है।",
+        "res.p3": "शारीरिक और मानसिक फिटनेस बनाने के लिए, ध्यान, नियमित व्यायाम, खेलकूद और निश्चित टीवी घंटे दैनिक कार्यक्रम का हिस्सा हैं। कक्षाओं में बोलचाल की अंग्रेजी और व्याकरण पर प्रतिदिन ज़ोर दिया जाता है।",
+        "res.badgeTitle": "आधुनिक गुरुकुल",
+        "res.badgeSub": "भारतीय संस्कारों से युक्त",
+        "msg.kicker": "नेतृत्व का संदेश",
+        "msg.title": "अध्यक्ष का संदेश",
+        "msg.p1": "“हमने छात्रों के बीच शैक्षिक विकास, स्वास्थ्य सुधार और संस्कार/मूल्यों को विकसित करने को ध्यान में रखते हुए अपने स्कूल भारद्वाज गुरुकुल की शुरुआत की। रवींद्रनाथ टैगोर के सपने को सच करते हुए, हमने 1,50,000 वर्ग फुट में पौधारोपण करके एक बगीचा बनाया और हरे-भरे, स्वस्थ वातावरण में स्कूल चलाते हैं। भारद्वाज गुरुकुल के सभी छात्र हमारे लिए भगवान की तरह हैं, विशेष रूप से हमारी छात्राएं। उन्हें खेल/क्रीड़ा की सभी सुविधाओं, विशेष पांच बार पौष्टिक भोजन और मनोरंजन के साथ बड़े आराम से रखा और पढ़ाया जाता है।”",
+        "msg.p2": "“मैं दृढ़ विश्वास रखता हूँ कि मूल्य प्रणाली के साथ शिक्षा की कोई सीमा नहीं होती है। संस्कार/मूल्यों को विकसित करना अधिक महत्वपूर्ण है। आजकल, हमारी युवा पीढ़ी मोबाइल फोन, टीवी और सिनेमा के माध्यम से फैल रही पश्चिमी संस्कृति से प्रभावित हो रही है। अधिकांश स्कूलों में शिक्षा आसानी से उपलब्ध है, जबकि चरित्र निर्माण (संस्कार) पर अधिक ध्यान नहीं दिया जाता है। हमारा स्कूल प्राचीन काल के गुरुकुलों की तरह चरित्र निर्माण के लिए सभी अवसर और मार्गदर्शन प्रदान करता है। मैं व्यक्तिगत रूप से इन गतिविधियों में शामिल हूँ और इनकी बारीकी से निगरानी करता हूँ।”",
+        "msg.p3": "“मैं हमारे स्कूल के सभी छात्रों को देश के सर्वोत्तम भविष्य के नागरिक बनने की उम्मीद के साथ शुभकामनाएं देता हूं। — जय हिंद”",
+        "msg.author": "श्री जवाहर लाल भारद्वाज",
+        "msg.authorTitle": "संस्थापक अध्यक्ष, भारद्वाज एजुकेशनल एंड चैरिटेबल ट्रस्ट",
+        "msg.authorCreds": "पूर्व-उपाध्यक्ष, नगर परिषद, बेगूसराय; पूर्व-अध्यक्ष, शाहपुर बहदलपुर पैक्स",
+        "msg.directorTitle": "संस्थापक निदेशक",
+        "msg.directorName": "श्री शिव प्रकाश भारद्वाज",
+        "rules.kicker": "नियम और विनियम",
+        "rules.title": "विद्यालय के दिशा-निर्देश एवं आचार संहिता",
+        "rules.sub": "एक सुरक्षित, व्यवस्थित और अनुशासित शिक्षण वातावरण सुनिश्चित करने के लिए आवासीय और डे-बोर्डिंग छात्रों हेतु आवश्यक नियम।",
+        "tabs.discipline": "अनुशासन नियम",
+        "tabs.parents": "अभिभावकों से अनुरोध",
+        "tabs.leave": "अवकाश एवं निष्कासन",
+        "disc.heading": "छात्र अनुशासन एवं आचरण",
+        "disc.r1": "छात्रों को \"ईश्वर की पितृत्व और मनुष्य की बंधुत्व\" की भावना विकसित करते हुए परिसर में खुद भी जीना चाहिए और दूसरों को भी जीने देना चाहिए।",
+        "disc.r2": "\"हमेशा मदद करें और कभी किसी को ठेस न पहुँचाएँ\" को जीवन में उतारा जाना चाहिए।",
+        "disc.r3": "छात्रों को बिना पूर्व अनुमति के परिसर छोड़ने की अनुमति नहीं है।",
+        "disc.r4": "पढ़ाई में आदतन लापरवाही, अनुचित व्यवहार, अनैतिक आचरण, शिक्षकों के प्रति अनादर, साथी छात्रों के साथ खराब व्यवहार और अनियमित उपस्थिति से सख्ती से निपटा जाएगा।",
+        "disc.r5": "छात्रों को सहपाठियों के प्रति उचित आदर और शिक्षकों के प्रति आज्ञाकारिता दिखानी चाहिए।",
+        "disc.r6": "सिगरेट, तंबाकू, नशीली दवाओं और शराब का उपयोग करने पर गंभीर सजा दी जाएगी।",
+        "disc.r7": "अन्य छात्रों, शिक्षकों या स्कूल की संपत्ति की चोरी और जानबूझकर नुकसान पहुंचाने पर तत्काल निष्कासन किया जाएगा।",
+        "disc.r8": "छात्रों को खाने-पीने की चीजें (अचार, घी, दवाएं, टॉनिक सहित) या नकद/मूल्यवान वस्तुएं जैसे वॉकमैन, मोबाइल फोन, कैमरा आदि लाने या रखने की अनुमति नहीं है। ऐसी वस्तुएं जब्त कर ली जाएंगी और संबंधित छात्र पर 250 रुपये का जुर्माना लगाया जाएगा।",
+        "disc.r9": "छात्रों को कक्षाओं, छात्रावासों, भोजन कक्ष और सामान्य रूप से परिसर के सभी नियमों और विनियमों का सख्ती से पालन करना चाहिए।",
+        "disc.r10": "छात्रों को हर समय परिसर में अंग्रेजी में बातचीत करनी चाहिए।",
+        "disc.r11": "\"सौजन्य से सौजन्य बढ़ता है\" — बातचीत में \"कृपया\" (Please) और \"धन्यवाद\" (Thank you) शब्दों का प्रयोग करें।",
+        "disc.r12": "छात्रों को अपनी पढ़ाई में जिम्मेदारी की उच्च भावना रखनी चाहिए।",
+        "disc.r13": "छात्रों को परिसर में दाढ़ी या मूंछ रखने की अनुमति नहीं है।",
+        "parent.heading": "अभिभावकों से सहयोग का अनुरोध",
+        "parent.r1": "कृपया पत्राचार या सामयिक दौरों के माध्यम से निदेशक के संपर्क में रहें, और अपने बच्चे की समग्र प्रगति सुनिश्चित करने के लिए सहयोग करें।",
+        "parent.r2": "माता-पिता से अनुरोध है कि वे अपने बच्चे के सामने संस्था या कर्मचारियों के बारे में बुरा न बोलें — इससे बच्चे के भविष्य पर प्रतिकूल प्रभाव पड़ सकता है।",
+        "parent.r3": "घर पर अनुशासित बच्चा स्कूल में भी अनुशासित रहेगा। कृपया अपने बच्चे को घर पर परेशान न करें; इसके बजाय, उन्हें प्रोत्साहित करें और उनमें आत्मविश्वास जगाएं।",
+        "parent.r4": "कृपया अपने बच्चे को सीधे पैसे न दें या न भेजें।",
+        "parent.r5": "स्कूल फिर से खुलने के एक दिन पहले शाम 5:00 बजे से पहले छात्रों को वापस स्कूल लाया जाना चाहिए।",
+        "parent.r6": "यदि कोई छात्र अधिकारियों की अनुमति के बिना परिसर छोड़ता है तो संस्थान जिम्मेदार नहीं होगा।",
+        "parent.r7": "जब आपका बच्चा छुट्टी पर घर पर हो, तो उसे स्कूल से सीखी गई अच्छी प्रथाओं को जारी रखने के लिए प्रोत्साहित करें — जल्दी उठना, नियमित पढ़ाई, घर पर मदद करना आदि।",
+        "parent.r8": "आगमन पर, आगंतुक रजिस्टर में अपना नाम, पता और उद्देश्य दर्ज करें, और अभिभावक कोने में प्रतीक्षा करें। अपने बच्चे के अलावा किसी अन्य बच्चे से मिलने के लिए निदेशक से अनुमति प्राप्त करें। आगंतुक माता-पिता के लिए छात्रावास/शयनकक्ष में प्रवेश की अनुमति नहीं है। कार्य दिवसों में अभिभावक अपने बच्चों से नहीं मिल सकते हैं।",
+        "parent.r9": "सभी माता-पिता से अनुरोध है कि वे संस्थान के सुचारू संचालन और अपने बच्चों को भारत का योग्य नागरिक बनाने में मदद करने के लिए इन निर्देशों का पालन करने में प्रशासन और कर्मचारियों का सहयोग करें।",
+        "leave.heading": "अवकाश नियम",
+        "leave.body": "अभिभावकों को यह सुनिश्चित करना चाहिए कि उनके बच्चे छुट्टियों के बाद नियत तारीखों पर स्कूल लौट आएं। छुट्टियों को बढ़ाने के लिए छुट्टी के आवेदनों पर विचार नहीं किया जाएगा। यदि कोई छात्र बिना किसी पूर्व स्वीकृति के लगातार पंद्रह कार्य दिवसों तक अनुपस्थित रहता है, तो उसका नाम बिना किसी सूचना के सूची से हटा दिया जाएगा।",
+        "removal.heading": "हटाने के आधार",
+        "removal.r1": "अनुशासन की कमी",
+        "removal.r2": "अधिक आयु के छात्र",
+        "removal.r3": "शुल्क का भुगतान न करना",
+        "removal.r4": "अनियमित उपस्थिति और लंबी अनुपस्थिति",
+        "ft.about": "आवासीय शिक्षा प्रणाली में उत्कृष्टता के प्रति समर्पित, 2005 से।",
+        "ft.links": "त्वरित लिंक",
+        "ft.legal": "मान्यता",
+        "ft.trust": "भारद्वाज एजुकेशनल एंड चैरिटेबल ट्रस्ट",
+        "ft.copy": "© 2026 भारद्वाज गुरुकुल. सर्वाधिकार सुरक्षित.",
+        "ft.motto": "अभ्यास से पूर्णता • अप्यो दीप्तो भव्",
+        "float.call": "कॉल",
+        "float.wa": "व्हाट्सएप",
+        "float.mail": "ईमेल"
+      }
+    };
+
+    function renderIcons() { if (window.lucide) lucide.createIcons(); }
+
+    function applyLang(lang) {
+      const dict = i18n[lang] || i18n.en;
+      document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          if (/[<>]/.test(dict[key])) el.innerHTML = dict[key];
+          else el.textContent = dict[key];
+        }
+      });
+
+      document.body.classList.toggle('font-deva', lang === 'hi');
+      document.getElementById('langLabel').textContent = lang === 'hi' ? 'EN' : 'हिं';
+      try { localStorage.setItem('bg_lang', lang); } catch (e) {}
+      renderIcons();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderIcons();
+      let saved = 'en';
+      try { saved = localStorage.getItem('bg_lang') || 'en'; } catch (e) {}
+      applyLang(saved);
+
+      document.getElementById('langToggle').addEventListener('click', () => {
+        const current = localStorage.getItem('bg_lang') || 'en';
+        applyLang(current === 'en' ? 'hi' : 'en');
+      });
+
+      const menuBtn = document.getElementById('menuToggle');
+      const menu = document.getElementById('mobileMenu');
+      menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+      // Reveal-on-scroll
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    });
+
+    // Tab switcher function
+    function switchTab(tab) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      
+      // Reset button classes
+      const activeBtnClass = 'text-leaf-800 border-leaf-700';
+      const inactiveBtnClass = 'text-ink-700 hover:text-leaf-800 border-transparent';
+      
+      const tabBtns = ['BtnDiscipline', 'BtnParents', 'BtnLeave'];
+      tabBtns.forEach(btnId => {
+        const btn = document.getElementById('tab' + btnId);
+        btn.className = btn.className.replace(activeBtnClass, '').replace(inactiveBtnClass, '').trim() + ' ' + inactiveBtnClass;
+      });
+
+      // Show selected tab & set active button style
+      if (tab === 'discipline') {
+        document.getElementById('tabContentDiscipline').classList.remove('hidden');
+        const btn = document.getElementById('tabBtnDiscipline');
+        btn.className = btn.className.replace(inactiveBtnClass, '').trim() + ' ' + activeBtnClass;
+      } else if (tab === 'parents') {
+        document.getElementById('tabContentParents').classList.remove('hidden');
+        const btn = document.getElementById('tabBtnParents');
+        btn.className = btn.className.replace(inactiveBtnClass, '').trim() + ' ' + activeBtnClass;
+      } else if (tab === 'leave') {
+        document.getElementById('tabContentLeave').classList.remove('hidden');
+        const btn = document.getElementById('tabBtnLeave');
+        btn.className = btn.className.replace(inactiveBtnClass, '').trim() + ' ' + activeBtnClass;
+      }
+    }
+  </script>
+</body>
+
+</html>

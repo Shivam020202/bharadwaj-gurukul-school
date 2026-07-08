@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="meta.title">Notice Board & Circulars — Bhardwaj Gurukul, Begusarai</title>
+  <meta name="description" data-i18n="meta.description"
+    content="Access the latest announcements, circulars, dynamic school notices, and admission criteria at Bhardwaj Gurukul." />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saffron: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+            leaf: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534' },
+            crimson: { 50: '#fef2f2', 100: '#fee2e2', 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c' },
+            ink: { 900: '#1c1917', 800: '#292524', 700: '#44403c' },
+            paper: '#fffbf2'
+          },
+          fontFamily: {
+            sans: ['Forum', 'Poppins', 'Inter', 'system-ui', 'serif'],
+            deva: ['Tiro Devanagari Hindi', 'Noto Sans Devanagari', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 6px 24px -8px rgba(0,0,0,0.15)',
+            pop: '0 12px 30px -10px rgba(180,83,9,0.35)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Forum&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Forum', 'Poppins', system-ui, serif;
+      background: #fffbf2;
+    }
+
+    [lang-hi] {
+      font-family: 'Tiro Devanagari Hindi', 'Noto Sans Devanagari', sans-serif;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #f59e0b;
+      outline-offset: 3px;
+      border-radius: 8px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .6s ease-out;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Priority badges for notices */
+    .priority-urgent {
+      background-color: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .priority-high {
+      background-color: #ffedd5;
+      color: #b45309;
+      border: 1px solid #fed7aa;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .priority-normal {
+      background-color: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .priority-low {
+      background-color: #f3f4f6;
+      color: #4b5563;
+      border: 1px solid #e5e7eb;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-clamp: 2;
+    }
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-clamp: 3;
+    }
+  </style>
+</head>
+
+<body class="text-ink-900">
+
+  <!-- ============ TOP NOTICE BAR ============ -->
+  <div class="bg-saffron-500 text-white text-sm py-2 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 text-center font-medium">
+      <span data-i18n="notice.line">📣 Admissions Open for Academic Session 2026–27 | Contact School Office</span>
+    </div>
+  </div>
+
+  <!-- ============ HEADER / NAV ============ -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-soft">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3">
+          <img src="Bhardwaj-logo-light.png" alt="Bhardwaj Gurukul Logo" class="w-full h-16 " />
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold">
+          <a href="index.html" class="hover:text-saffron-600" data-i18n="nav.home">Home</a>
+          <a href="about.html" class="hover:text-saffron-600" data-i18n="nav.about">About</a>
+          <a href="facilities.html" class="hover:text-saffron-600" data-i18n="nav.facilities">Facilities</a>
+          <a href="index.html#achievers" class="hover:text-saffron-600" data-i18n="nav.achievers">Achievers</a>
+          <a href="index.html#gallery" class="hover:text-saffron-600" data-i18n="nav.gallery">Gallery</a>
+          <a href="index.html#admissions" class="hover:text-saffron-600" data-i18n="nav.admissions">Admissions</a>
+          <a href="notices.html" class="text-saffron-600 border-b-2 border-saffron-500 pb-1" data-i18n="nav.notices">Notices</a>
+          <a href="contact.html" class="hover:text-saffron-600" data-i18n="nav.contact">Contact</a>
+        </nav>
+
+        <!-- Right cluster -->
+        <div class="flex items-center gap-2 md:gap-3">
+          <!-- Language Toggle -->
+          <button id="langToggle" aria-label="Switch language"
+            class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-leaf-50 text-leaf-800 border-2 border-leaf-500 hover:bg-leaf-500 hover:text-white text-xs md:text-sm font-bold transition">
+            <i data-lucide="languages" class="w-4 h-4"></i>
+            <span id="langLabel">हिं</span>
+          </button>
+
+          <!-- Call CTA -->
+          <a href="tel:9934220425"
+            class="hidden sm:inline-flex items-center gap-2 bg-crimson-600 hover:bg-crimson-700 text-white px-4 py-2 rounded-full text-sm font-bold shadow-pop">
+            <i data-lucide="phone-call" class="w-4 h-4"></i>
+            <span data-i18n="cta.call">Call Now</span>
+          </a>
+
+          <!-- Mobile menu toggle -->
+          <button id="menuToggle" class="lg:hidden p-2 rounded-lg hover:bg-saffron-50" aria-label="Open menu">
+            <i data-lucide="menu" class="w-6 h-6 text-leaf-800"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden lg:hidden border-t border-saffron-100 bg-white">
+      <nav class="px-4 py-3 grid grid-cols-2 gap-2 text-sm font-semibold">
+        <a href="index.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.home">Home</a>
+        <a href="about.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.about">About</a>
+        <a href="facilities.html" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.facilities">Facilities</a>
+        <a href="index.html#achievers" class="px-3 py-2 rounded-lg bg-leaf-50" data-i18n="nav.achievers">Achievers</a>
+        <a href="index.html#gallery" class="px-3 py-2 rounded-lg bg-saffron-50" data-i18n="nav.gallery">Gallery</a>
+        <a href="index.html#admissions" class="px-3 py-2 rounded-lg bg-leaf-50" data-i18n="nav.admissions">Admissions</a>
+        <a href="notices.html" class="px-3 py-2 rounded-lg bg-leaf-500 text-white" data-i18n="nav.notices">Notices</a>
+        <a href="contact.html" class="px-3 py-2 rounded-lg bg-leaf-50 col-span-2" data-i18n="nav.contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="relative bg-gradient-to-br from-leaf-800 to-leaf-950 text-white py-16 md:py-24 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <span class="bg-saffron-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="hero.tagline">Announcements & Circulars</span>
+      <h1 class="text-4xl md:text-6xl font-extrabold mt-4" data-i18n="hero.title">Official Notice Board</h1>
+      <p class="text-white/80 mt-4 max-w-2xl mx-auto text-base md:text-lg" data-i18n="hero.subtitle">
+        Stay updated with real-time dynamic alerts, admission criteria notices, and campus timing rules.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ DYNAMIC NOTICE BOARD ============ -->
+  <section class="py-14 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 reveal">
+        <span class="bg-leaf-100 text-leaf-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="notices.kicker">Live Updates</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-leaf-800" data-i18n="notices.title">Dynamic Notices</h2>
+        <p class="text-ink-700 mt-2 text-sm md:text-base max-w-2xl mx-auto" data-i18n="notices.sub">
+          Latest official publications. Search and filter through current alerts.
+        </p>
+      </div>
+
+      <!-- Search & Filter Controls -->
+      <div class="bg-saffron-50/50 rounded-3xl p-5 md:p-6 shadow-soft border border-saffron-100 max-w-4xl mx-auto mb-10 reveal flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div class="relative w-full md:w-72">
+          <i data-lucide="search" class="absolute left-3.5 top-3.5 w-5 h-5 text-ink-600"></i>
+          <input type="text" id="noticeSearch" onkeyup="filterNotices()" placeholder="Search notices..."
+            class="w-full pl-11 pr-4 py-3 text-sm rounded-2xl border-2 border-saffron-200 outline-none focus:border-saffron-500 font-semibold" />
+        </div>
+        <div class="flex gap-2 w-full md:w-auto overflow-x-auto no-scrollbar">
+          <button onclick="filterPriority('all')" id="filterAll" class="px-4 py-2 text-xs font-bold bg-saffron-500 text-white rounded-full transition whitespace-nowrap">All</button>
+          <button onclick="filterPriority('urgent')" id="filterUrgent" class="px-4 py-2 text-xs font-bold bg-white text-ink-800 border border-saffron-200 hover:bg-saffron-100 rounded-full transition whitespace-nowrap">Urgent</button>
+          <button onclick="filterPriority('high')" id="filterHigh" class="px-4 py-2 text-xs font-bold bg-white text-ink-800 border border-saffron-200 hover:bg-saffron-100 rounded-full transition whitespace-nowrap">High</button>
+          <button onclick="filterPriority('normal')" id="filterNormal" class="px-4 py-2 text-xs font-bold bg-white text-ink-800 border border-saffron-200 hover:bg-saffron-100 rounded-full transition whitespace-nowrap">Normal</button>
+        </div>
+      </div>
+
+      <!-- Notices Container -->
+      <div id="noticesContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal max-w-6xl mx-auto">
+        <!-- Notices loaded dynamically -->
+        <div class="col-span-full flex flex-col items-center justify-center py-12 text-center">
+          <div class="w-16 h-16 rounded-full bg-saffron-100 flex items-center justify-center mb-4">
+            <i data-lucide="loader-2" class="w-8 h-8 text-saffron-400 animate-spin"></i>
+          </div>
+          <p class="text-ink-600 font-medium">Loading notices...</p>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="noticesEmpty" class="hidden text-center py-12 reveal">
+        <div class="w-20 h-20 rounded-full bg-leaf-50 flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="bell-off" class="w-10 h-10 text-leaf-300"></i>
+        </div>
+        <p class="text-ink-600 font-semibold">No notices matched your criteria</p>
+        <p class="text-sm text-ink-400 mt-1">Try resetting filters or changing search keywords.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ADMISSION CRITERIA NOTICE ============ -->
+  <section id="admission-notice" class="py-14 md:py-20 bg-gradient-to-br from-saffron-50/50 via-white to-leaf-50/50 border-t border-saffron-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 reveal">
+        <span class="bg-crimson-100 text-crimson-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="adm.kicker">Admission Notice</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-leaf-800" data-i18n="adm.title">Required Age for Admission (2026–27)</h2>
+        <p class="text-ink-700 mt-2 text-sm md:text-base max-w-2xl mx-auto" data-i18n="adm.sub">
+          Admissions are determined strictly according to school age standards evaluated as of March 31, 2026.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+        <!-- Table -->
+        <div class="bg-white rounded-3xl shadow-soft p-6 md:p-8 border border-saffron-50 reveal flex flex-col justify-between">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm md:text-base">
+              <thead class="bg-saffron-50 text-saffron-700">
+                <tr>
+                  <th class="px-4 py-3 text-left rounded-tl-2xl font-bold" data-i18n="adm.thClass">Class</th>
+                  <th class="px-4 py-3 text-center font-bold" data-i18n="adm.thMin">Min Age</th>
+                  <th class="px-4 py-3 text-center rounded-tr-2xl font-bold" data-i18n="adm.thMax">Max Age</th>
+                </tr>
+              </thead>
+              <tbody class="font-semibold text-ink-800 divide-y divide-saffron-50">
+                <tr><td class="px-4 py-2.5">I</td><td class="text-center">6</td><td class="text-center">8</td></tr>
+                <tr class="bg-saffron-50/20"><td class="px-4 py-2.5">II</td><td class="text-center">7</td><td class="text-center">9</td></tr>
+                <tr><td class="px-4 py-2.5">III</td><td class="text-center">8</td><td class="text-center">10</td></tr>
+                <tr class="bg-saffron-50/20"><td class="px-4 py-2.5">IV</td><td class="text-center">9</td><td class="text-center">11</td></tr>
+                <tr><td class="px-4 py-2.5">V</td><td class="text-center">10</td><td class="text-center">12</td></tr>
+                <tr class="bg-saffron-50/20"><td class="px-4 py-2.5">VI</td><td class="text-center">11</td><td class="text-center">13</td></tr>
+                <tr><td class="px-4 py-2.5">VII</td><td class="text-center">12</td><td class="text-center">14</td></tr>
+                <tr class="bg-saffron-50/20"><td class="px-4 py-2.5">VIII</td><td class="text-center">13</td><td class="text-center">15</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Documentation details -->
+        <div class="bg-white rounded-3xl shadow-soft p-6 md:p-8 border border-saffron-50 reveal flex flex-col justify-between">
+          <div>
+            <h3 class="font-extrabold text-lg text-leaf-800 mb-4 flex items-center gap-2">
+              <i data-lucide="file-check" class="w-5 h-5 text-saffron-500"></i>
+              <span data-i18n="adm.docTitle">Essential Document Attachments</span>
+            </h3>
+            <p class="text-sm text-ink-700 leading-relaxed mb-4" data-i18n="adm.docBody">
+              Please submit a photocopy of your ward's Date of Birth Certificate and Aadhaar (Student, Mother, and Father) and blood group at the time of admission. Only a Date of Birth Certificate issued by the municipal authority or block will be accepted. Also submit the original Transfer Certificate with the Permanent Education Number (PEN) written on it.
+            </p>
+          </div>
+          <div class="bg-saffron-50 border-l-4 border-saffron-500 rounded-r-2xl p-4">
+            <h4 class="font-bold text-saffron-800 text-sm" data-i18n="adm.formTitle">Prospectus Form Notice</h4>
+            <p class="text-xs text-ink-800 mt-1" data-i18n="adm.formBody">
+              Applications must be made only on the prescribed form enclosed in the prospectus obtained from the school office.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OFFICE & VISITING TIMINGS ============ -->
+  <section class="py-14 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-leaf-800 text-white rounded-3xl p-6 md:p-10 shadow-pop max-w-4xl mx-auto reveal">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <span class="bg-saffron-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" data-i18n="timings.kicker">School Availability</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold mt-3" data-i18n="timings.title">Office & Visiting Hours</h2>
+            <p class="text-white/80 mt-3 text-sm leading-relaxed" data-i18n="timings.desc">
+              For security and operations, parent meetings and administrative operations are structured strictly inside designated time frames.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-center gap-3 bg-white/10 p-3.5 rounded-2xl border border-white/15">
+              <i data-lucide="building" class="w-6 h-6 text-saffron-500 shrink-0"></i>
+              <div>
+                <div class="font-extrabold text-sm md:text-base" data-i18n="timings.t1">Office Working Hours</div>
+                <div class="text-xs text-white/70">Monday to Sunday, 9:00 AM – 5:00 PM</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-white/10 p-3.5 rounded-2xl border border-white/15">
+              <i data-lucide="users" class="w-6 h-6 text-saffron-500 shrink-0"></i>
+              <div>
+                <div class="font-extrabold text-sm md:text-base" data-i18n="timings.t2">Visiting Days for Parents</div>
+                <div class="text-xs text-white/70">Sunday, 9:00 AM – 5:00 PM (Strictly)</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 bg-white/10 p-3.5 rounded-2xl border border-white/15">
+              <i data-lucide="phone-call" class="w-6 h-6 text-saffron-500 shrink-0"></i>
+              <div>
+                <div class="font-extrabold text-sm md:text-base" data-i18n="timings.t3">Telephone Timings</div>
+                <div class="text-xs text-white/70">Sunday, 9:00 AM – 5:00 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="bg-ink-900 text-white/80 pt-10 pb-24 md:pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-3">
+          <img src="Bhardwaj-logo.png" alt="Bhardwaj Gurukul Logo" class="w-fit h-24" />
+        </div>
+        <p class="text-sm" data-i18n="ft.about">A commitment toward excellence in the residential system of education, since 2005.</p>
+        <div class="flex gap-3 mt-4">
+          <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+          <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+          <a href="#" aria-label="YouTube" class="w-9 h-9 rounded-full bg-white/10 hover:bg-saffron-500 grid place-items-center"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="font-bold text-white mb-3" data-i18n="ft.links">Quick Links</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="index.html" class="hover:text-saffron-500" data-i18n="nav.home">Home</a></li>
+          <li><a href="about.html" class="hover:text-saffron-500" data-i18n="nav.about">About</a></li>
+          <li><a href="facilities.html" class="hover:text-saffron-500" data-i18n="nav.facilities">Facilities</a></li>
+          <li><a href="index.html#achievers" class="hover:text-saffron-500" data-i18n="nav.achievers">Achievers</a></li>
+          <li><a href="contact.html" class="hover:text-saffron-500" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-bold text-white mb-3" data-i18n="ft.legal">Recognition</div>
+        <ul class="space-y-2 text-sm">
+          <li>UDISE: 10201002702</li>
+          <li>Recognition: 2221314202918094524</li>
+          <li data-i18n="ft.trust">Bhardwaj Educational & Charitable Trust</li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-white/10 text-xs flex flex-col md:flex-row items-center justify-between gap-2">
+      <div data-i18n="ft.copy">© 2026 Bhardwaj Gurukul. All rights reserved.</div>
+      <div class="opacity-70" data-i18n="ft.motto">Perfection Through Practice • अप्यो दीप्तो भव्</div>
+    </div>
+  </footer>
+
+  <!-- ============ FLOATING QUICK-CONTACT BAR (Mobile-First) ============ -->
+  <div class="fixed bottom-0 inset-x-0 z-50 md:bottom-6 md:right-6 md:left-auto md:w-auto">
+    <div class="bg-white/95 backdrop-blur border-t-2 md:border-2 border-saffron-500 md:rounded-full shadow-pop flex md:gap-1 divide-x divide-saffron-100">
+      <a href="tel:9934220425" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-crimson-600 hover:bg-crimson-50">
+        <i data-lucide="phone" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.call">Call</span>
+      </a>
+      <a href="https://wa.me/919934220425" target="_blank" rel="noopener" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-leaf-700 hover:bg-leaf-50">
+        <i data-lucide="message-circle" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.wa">WhatsApp</span>
+      </a>
+      <a href="mailto:bhardwajgurukulbgs@gmail.com" class="flex-1 md:flex-none md:px-5 py-3 flex items-center justify-center gap-2 font-bold text-saffron-600 hover:bg-saffron-50">
+        <i data-lucide="mail" class="w-5 h-5"></i><span class="md:inline text-sm" data-i18n="float.mail">Email</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== TRANSLATION DICTIONARY ====== -->
+  <script>
+    const i18n = {
+      en: {
+        "meta.title": "Notice Board & Circulars — Bhardwaj Gurukul, Begusarai",
+        "meta.description": "Access the latest announcements, circulars, dynamic school notices, and admission criteria at Bhardwaj Gurukul.",
+        "notice.line": "📣 Admissions Open for Academic Session 2026–27 | Contact School Office",
+        "nav.home": "Home",
+        "nav.about": "About",
+        "nav.facilities": "Facilities",
+        "nav.achievers": "Achievers",
+        "nav.gallery": "Gallery",
+        "nav.admissions": "Admissions",
+        "nav.notices": "Notices",
+        "nav.contact": "Contact",
+        "cta.call": "Call Now",
+        "hero.tagline": "Announcements & Circulars",
+        "hero.title": "Official Notice Board",
+        "hero.subtitle": "Stay updated with real-time dynamic alerts, admission criteria notices, and campus timing rules.",
+        "notices.kicker": "Live Updates",
+        "notices.title": "Dynamic Notices",
+        "notices.sub": "Latest official publications. Search and filter through current alerts.",
+        "adm.kicker": "Admission Notice",
+        "adm.title": "Required Age for Admission (2026–27)",
+        "adm.sub": "Admissions are determined strictly according to school age standards evaluated as of March 31, 2026.",
+        "adm.thClass": "Class",
+        "adm.thMin": "Min Age",
+        "adm.thMax": "Max Age",
+        "adm.docTitle": "Essential Document Attachments",
+        "adm.docBody": "Please submit a photocopy of your ward's Date of Birth Certificate and Aadhaar (Student, Mother, and Father) and blood group at the time of admission. Only a Date of Birth Certificate issued by the municipal authority or block will be accepted. Also submit the original Transfer Certificate with the Permanent Education Number (PEN) written on it.",
+        "adm.formTitle": "Prospectus Form Notice",
+        "adm.formBody": "Applications must be made only on the prescribed form enclosed in the prospectus obtained from the school office.",
+        "timings.kicker": "School Availability",
+        "timings.title": "Office & Visiting Hours",
+        "timings.desc": "For security and operations, parent meetings and administrative operations are structured strictly inside designated time frames.",
+        "timings.t1": "Office Working Hours",
+        "timings.t2": "Visiting Days for Parents",
+        "timings.t3": "Telephone Timings",
+        "ft.about": "A commitment toward excellence in the residential system of education, since 2005.",
+        "ft.links": "Quick Links",
+        "ft.legal": "Recognition",
+        "ft.trust": "Bhardwaj Educational & Charitable Trust",
+        "ft.copy": "© 2026 Bhardwaj Gurukul. All rights reserved.",
+        "ft.motto": "Perfection Through Practice • अप्यो दीप्तो भव्",
+        "float.call": "Call",
+        "float.wa": "WhatsApp",
+        "float.mail": "Email"
+      },
+      hi: {
+        "meta.title": "सूचना पट्ट और परिपत्र — भारद्वाज गुरुकुल, बेगूसराय",
+        "meta.description": "भारद्वाज गुरुकुल की नवीनतम घोषणाओं, सर्कुलरों, प्रवेश मानदंडों और आधिकारिक सूचनाओं को देखें।",
+        "notice.line": "📣 शैक्षणिक सत्र 2026–27 हेतु प्रवेश खुले हैं | स्कूल कार्यालय से संपर्क करें",
+        "nav.home": "मुख्य",
+        "nav.about": "परिचय",
+        "nav.facilities": "सुविधाएँ",
+        "nav.achievers": "उपलब्धियाँ",
+        "nav.gallery": "गैलरी",
+        "nav.admissions": "प्रवेश",
+        "nav.notices": "सूचनाएँ",
+        "nav.contact": "संपर्क",
+        "cta.call": "अभी कॉल करें",
+        "hero.tagline": "घोषणाएँ और परिपत्र",
+        "hero.title": "आधिकारिक सूचना पट्ट",
+        "hero.subtitle": "वास्तविक समय के गतिशील अलर्ट, प्रवेश मानदंड सूचनाओं और परिसर के समय के नियमों से अपडेट रहें।",
+        "notices.kicker": "लाइव अपडेट",
+        "notices.title": "आधिकारिक सूचनाएँ",
+        "notices.sub": "नवीनतम प्रकाशन। वर्तमान सूचनाओं को खोजें और फ़िल्टर करें।",
+        "adm.kicker": "प्रवेश सूचना",
+        "adm.title": "प्रवेश हेतु आवश्यक आयु (सत्र 2026–27)",
+        "adm.sub": "प्रवेश कड़ाई से विद्यालय की आयु सीमा के मानकों के अनुसार 31 मार्च, 2026 की तिथि तक गणना करके दिए जाते हैं।",
+        "adm.thClass": "कक्षा",
+        "adm.thMin": "न्यूनतम आयु",
+        "adm.thMax": "अधिकतम आयु",
+        "adm.docTitle": "आवश्यक दस्तावेज़ संलग्नक",
+        "adm.docBody": "प्रवेश के समय छात्र का जन्म प्रमाण पत्र, आधार कार्ड (छात्र, माता और पिता) और रक्त समूह की फोटोकॉपी जमा करें। केवल नगर निगम या ब्लॉक द्वारा जारी किया गया जन्म प्रमाण पत्र ही स्वीकार किया जाएगा। स्थायी शिक्षा संख्या (PEN) के साथ मूल स्थानांतरण प्रमाण पत्र (TC) भी जमा करें।",
+        "adm.formTitle": "आवेदन पत्र की सूचना",
+        "adm.formBody": "आवेदन केवल स्कूल कार्यालय से प्राप्त प्रॉस्पेक्टस में संलग्न निर्धारित प्रपत्र पर ही किया जाना चाहिए।",
+        "timings.kicker": "विद्यालय उपलब्धता",
+        "timings.title": "कार्यालय एवं विज़िट का समय",
+        "timings.desc": "सुरक्षा और संचालन के लिए, अभिभावक बैठकें और प्रशासनिक कार्य कड़ाई से निर्धारित समय सीमा के भीतर व्यवस्थित किए गए हैं।",
+        "timings.t1": "कार्यालय कार्य दिवस",
+        "timings.t2": "अभिभावकों के मिलने का दिन",
+        "timings.t3": "टेलीफोन वार्ता का समय",
+        "ft.about": "आवासीय शिक्षा प्रणाली में उत्कृष्टता के प्रति समर्पित, 2005 से।",
+        "ft.links": "त्वरित लिंक",
+        "ft.legal": "मान्यता",
+        "ft.trust": "भारद्वाज एजुकेशनल एंड चैरिटेबल ट्रस्ट",
+        "ft.copy": "© 2026 भारद्वाज गुरुकुल. सर्वाधिकार सुरक्षित.",
+        "ft.motto": "अभ्यास से पूर्णता • अप्यो दीप्तो भव्",
+        "float.call": "कॉल",
+        "float.wa": "व्हाट्सएप",
+        "float.mail": "ईमेल"
+      }
+    };
+
+    let allNotices = [];
+    let activePriority = 'all';
+
+    function renderIcons() { if (window.lucide) lucide.createIcons(); }
+
+    function applyLang(lang) {
+      const dict = i18n[lang] || i18n.en;
+      document.documentElement.setAttribute('lang', lang === 'hi' ? 'hi' : 'en');
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          if (/[<>]/.test(dict[key])) el.innerHTML = dict[key];
+          else el.textContent = dict[key];
+        }
+      });
+
+      document.body.classList.toggle('font-deva', lang === 'hi');
+      document.getElementById('langLabel').textContent = lang === 'hi' ? 'EN' : 'हिं';
+      try { localStorage.setItem('bg_lang', lang); } catch (e) {}
+      renderIcons();
+    }
+
+    // ====== FILTER FUNCTIONS ======
+    function filterPriority(priority) {
+      activePriority = priority;
+      
+      // Update UI active styling
+      const priorities = ['all', 'urgent', 'high', 'normal'];
+      const activeBtnClass = 'bg-saffron-500 text-white';
+      const inactiveBtnClass = 'bg-white text-ink-800 border border-saffron-200 hover:bg-saffron-100';
+      
+      priorities.forEach(p => {
+        const btn = document.getElementById('filter' + p.charAt(0).toUpperCase() + p.slice(1));
+        btn.className = btn.className.replace(activeBtnClass, '').replace(inactiveBtnClass, '').trim() + ' ' + inactiveBtnClass;
+      });
+
+      const activeBtn = document.getElementById('filter' + priority.charAt(0).toUpperCase() + priority.slice(1));
+      activeBtn.className = activeBtn.className.replace(inactiveBtnClass, '').trim() + ' ' + activeBtnClass;
+
+      filterNotices();
+    }
+
+    function filterNotices() {
+      const query = document.getElementById('noticeSearch').value.toLowerCase().trim();
+      const container = document.getElementById('noticesContainer');
+      const emptyState = document.getElementById('noticesEmpty');
+      
+      let filtered = allNotices;
+      
+      // 1. Filter by Priority
+      if (activePriority !== 'all') {
+        filtered = filtered.filter(n => (n.priority || 'normal') === activePriority);
+      }
+      
+      // 2. Filter by Search Query
+      if (query !== '') {
+        filtered = filtered.filter(n => 
+          n.title.toLowerCase().includes(query) || 
+          (n.content && n.content.toLowerCase().includes(query))
+        );
+      }
+      
+      // Render
+      if (filtered.length > 0) {
+        container.innerHTML = filtered.map(notice => {
+          const priorityClass = notice.priority || 'normal';
+          const date = new Date(notice.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+
+          return `
+            <div class="bg-white rounded-2xl shadow-soft border border-saffron-50 hover:shadow-pop transition-all group hover:-translate-y-1">
+              <div class="p-5 sm:p-6">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="w-10 h-10 rounded-xl ${getFileIconBg(priorityClass)} ${getFileIconColor(priorityClass)} flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="${getFileIcon(notice.file_type)}" class="w-5 h-5"></i>
+                  </div>
+                  ${notice.priority && notice.priority !== 'normal' ? `
+                    <span class="priority-${priorityClass} px-2 py-1 rounded-full text-xs border font-semibold">
+                      ${notice.priority}
+                    </span>
+                  ` : ''}
+                </div>
+                <h3 class="font-bold text-lg text-ink-900 mb-2 line-clamp-2">${escapeHtml(notice.title)}</h3>
+                ${notice.content ? `
+                  <p class="text-sm text-ink-700 mb-4 line-clamp-3">${escapeHtml(notice.content.substring(0, 150))}</p>
+                ` : ''}
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-ink-600">${date}</span>
+                  ${notice.file_url ? `
+                    <a href="${escapeHtml(notice.file_url)}" target="_blank" rel="noopener"
+                       class="inline-flex items-center gap-1.5 text-sm font-bold text-saffron-600 hover:text-saffron-700 transition">
+                      <i data-lucide="download" class="w-4 h-4"></i>
+                      View
+                    </a>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        container.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+      } else {
+        container.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+      }
+      
+      renderIcons();
+    }
+
+    // ====== HELPER FUNCTIONS ======
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function getFileIcon(fileType) {
+      switch(fileType) {
+        case 'pdf': return 'file-text';
+        case 'image': return 'image';
+        case 'text': return 'file-text';
+        default: return 'file';
+      }
+    }
+
+    function getFileIconBg(priority) {
+      if (priority === 'urgent') return 'bg-crimson-100';
+      if (priority === 'high') return 'bg-saffron-100';
+      if (priority === 'low') return 'bg-gray-100';
+      return 'bg-leaf-100';
+    }
+
+    function getFileIconColor(priority) {
+      if (priority === 'urgent') return 'text-crimson-600';
+      if (priority === 'high') return 'text-saffron-700';
+      if (priority === 'low') return 'text-gray-600';
+      return 'text-leaf-600';
+    }
+
+    // ====== LOAD NOTICES ======
+    async function loadNotices() {
+      const container = document.getElementById('noticesContainer');
+      try {
+        const response = await fetch('https://znijavgkwipxtwqmmgxh.supabase.co/rest/v1/notices?select=*,created_at,updated_at&is_active=eq.true&order=created_at.desc', {
+          headers: {
+            'apikey': 'sb_publishable_2N3zplrvZ0F6xiZZbysqVg_UwOTHtYQ',
+            'Authorization': 'Bearer sb_publishable_2N3zplrvZ0F6xiZZbysqVg_UwOTHtYQ'
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch notices');
+
+        allNotices = await response.json();
+        filterNotices();
+      } catch (error) {
+        console.error('Error loading notices:', error);
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <div class="w-16 h-16 rounded-full bg-crimson-100 flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="alert-circle" class="w-8 h-8 text-crimson-400"></i>
+            </div>
+            <p class="text-crimson-600 font-medium">Unable to load notices</p>
+            <p class="text-sm text-ink-400 mt-1">Please try again later</p>
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderIcons();
+      let saved = 'en';
+      try { saved = localStorage.getItem('bg_lang') || 'en'; } catch (e) {}
+      applyLang(saved);
+
+      document.getElementById('langToggle').addEventListener('click', () => {
+        const current = localStorage.getItem('bg_lang') || 'en';
+        applyLang(current === 'en' ? 'hi' : 'en');
+      });
+
+      const menuBtn = document.getElementById('menuToggle');
+      const menu = document.getElementById('mobileMenu');
+      menuBtn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+      // Reveal-on-scroll
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      loadNotices();
+    });
+  </script>
+</body>
+
+</html>

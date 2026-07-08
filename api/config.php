@@ -84,12 +84,14 @@ if (!ini_get('curl.cainfo') && file_exists(__DIR__ . '/../cacert.pem')) {
 /**
  * Supabase Database Connection
  */
-class SupabaseDB {
+class SupabaseDB
+{
     private $url;
     private $key;
     private $serviceKey;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->url = rtrim(SUPABASE_URL, '/');
         $this->key = SUPABASE_KEY;
         $this->serviceKey = SUPABASE_SERVICE_KEY;
@@ -98,7 +100,8 @@ class SupabaseDB {
     /**
      * Make a request to Supabase REST API
      */
-    private function request($method, $table, $data = [], $options = []) {
+    private function request($method, $table, $data = [], $options = [])
+    {
         $url = $this->url . '/rest/v1/' . $table;
 
         $headers = [
@@ -146,7 +149,8 @@ class SupabaseDB {
     /**
      * SELECT query
      */
-    public function select($table, $filters = [], $order = null, $limit = null) {
+    public function select($table, $filters = [], $order = null, $limit = null)
+    {
         $options = ['query' => $filters];
 
         if ($order) {
@@ -163,14 +167,16 @@ class SupabaseDB {
     /**
      * INSERT query
      */
-    public function insert($table, $data) {
+    public function insert($table, $data)
+    {
         return $this->request('POST', $table, $data);
     }
 
     /**
      * UPDATE query
      */
-    public function update($table, $data, $filters) {
+    public function update($table, $data, $filters)
+    {
         $options = ['query' => array_merge($filters, ['method' => 'PATCH'])];
         return $this->request('PATCH', $table, $data, $options);
     }
@@ -178,7 +184,8 @@ class SupabaseDB {
     /**
      * DELETE query
      */
-    public function delete($table, $filters) {
+    public function delete($table, $filters)
+    {
         $options = ['query' => array_merge($filters, ['method' => 'DELETE'])];
         return $this->request('DELETE', $table, [], $options);
     }
@@ -186,7 +193,8 @@ class SupabaseDB {
     /**
      * Upload file to Supabase Storage
      */
-    public function uploadFile($bucket, $path, $fileData, $contentType) {
+    public function uploadFile($bucket, $path, $fileData, $contentType)
+    {
         $url = $this->url . '/storage/v1/object/' . $bucket . '/' . $path;
 
         $headers = [
@@ -221,14 +229,16 @@ class SupabaseDB {
     /**
      * Get public URL for uploaded file
      */
-    public function getPublicUrl($bucket, $path) {
+    public function getPublicUrl($bucket, $path)
+    {
         return $this->url . '/storage/v1/object/public/' . $bucket . '/' . $path;
     }
 
     /**
      * Delete file from Supabase Storage
      */
-    public function deleteFile($bucket, $path) {
+    public function deleteFile($bucket, $path)
+    {
         $url = $this->url . '/storage/v1/object/' . $bucket . '/' . $path;
 
         $headers = [
@@ -265,7 +275,8 @@ class SupabaseDB {
 /**
  * Send JSON response
  */
-function jsonResponse($status, $data, $code = 200) {
+function jsonResponse($status, $data, $code = 200)
+{
     http_response_code($code);
     echo json_encode([
         'success' => $status === 'success',
@@ -279,7 +290,8 @@ function jsonResponse($status, $data, $code = 200) {
 /**
  * Sanitize input
  */
-function sanitize($input) {
+function sanitize($input)
+{
     if (is_array($input)) {
         return array_map('sanitize', $input);
     }
@@ -289,28 +301,32 @@ function sanitize($input) {
 /**
  * Validate email
  */
-function isValidEmail($email) {
+function isValidEmail($email)
+{
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
 
 /**
  * Generate secure token
  */
-function generateToken($length = 32) {
+function generateToken($length = 32)
+{
     return bin2hex(random_bytes($length));
 }
 
 /**
  * Generate session token
  */
-function generateSessionToken() {
+function generateSessionToken()
+{
     return hash('sha256', generateToken(32) . microtime(true) . uniqid());
 }
 
 /**
  * Hash password using bcrypt
  */
-function hashPassword($password) {
+function hashPassword($password)
+{
     return password_hash($password, PASSWORD_DEFAULT, [
         'cost' => 12
     ]);
@@ -319,14 +335,16 @@ function hashPassword($password) {
 /**
  * Verify password
  */
-function verifyPassword($password, $hash) {
+function verifyPassword($password, $hash)
+{
     return password_verify($password, $hash);
 }
 
 /**
  * Clean expired sessions
  */
-function cleanExpiredSessions($db) {
+function cleanExpiredSessions($db)
+{
     $result = $db->delete(TABLE_SESSIONS, ['expires_at' => ['lt' => date('c')]]);
     return $result;
 }
@@ -334,7 +352,8 @@ function cleanExpiredSessions($db) {
 /**
  * Get client IP address
  */
-function getClientIP() {
+function getClientIP()
+{
     if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
         return $_SERVER['HTTP_CF_CONNECTING_IP'];
     }
@@ -347,14 +366,16 @@ function getClientIP() {
 /**
  * Get user agent
  */
-function getUserAgent() {
+function getUserAgent()
+{
     return $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
 }
 
 /**
  * Set login attempt tracking
  */
-function setLoginAttempt($email) {
+function setLoginAttempt($email)
+{
     $ip = getClientIP();
     $attempts = $_SESSION['login_attempts'][$ip . '_' . strtolower($email)] ?? ['count' => 0, 'time' => time()];
 
@@ -370,7 +391,8 @@ function setLoginAttempt($email) {
 /**
  * Check if login is allowed
  */
-function isLoginAllowed($email) {
+function isLoginAllowed($email)
+{
     $ip = getClientIP();
     $attempts = $_SESSION['login_attempts'][$ip . '_' . strtolower($email)] ?? ['count' => 0, 'time' => time()];
 
@@ -386,9 +408,12 @@ function isLoginAllowed($email) {
 /**
  * Validate CSRF token
  */
-function validateCSRF() {
-    if (!isset($_POST['csrf_token']) || empty($_SESSION['csrf_token']) ||
-        $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+function validateCSRF()
+{
+    if (
+        !isset($_POST['csrf_token']) || empty($_SESSION['csrf_token']) ||
+        $_POST['csrf_token'] !== $_SESSION['csrf_token']
+    ) {
         return false;
     }
     return true;
@@ -397,7 +422,8 @@ function validateCSRF() {
 /**
  * Generate CSRF token
  */
-function generateCSRFToken() {
+function generateCSRFToken()
+{
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = generateToken(16);
     }
