@@ -1,0 +1,20 @@
+<?php
+// Local Supabase configuration.
+// Copy this file to api/config.local.php and add your own values.
+// Do not commit api/config.local.php to version control.
+
+if (!defined('SUPABASE_URL')) {
+    define('SUPABASE_URL', 'https://your-project.supabase.co');
+}
+
+if (!defined('SUPABASE_KEY')) {
+    define('SUPABASE_KEY', 'sb_publishable_your_public_key');
+}
+
+if (!defined('SUPABASE_ANON_KEY')) {
+    define('SUPABASE_ANON_KEY', 'sb_publishable_your_anon_key');
+}
+
+if (!defined('SUPABASE_SERVICE_KEY')) {
+    define('SUPABASE_SERVICE_KEY', 'sb_secret_your_service_role_key');
+}

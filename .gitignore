@@ -1,0 +1,6 @@
+# Ignore local configuration files containing secrets
+/api/config.local.php
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
