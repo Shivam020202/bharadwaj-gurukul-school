@@ -1,0 +1,3 @@
+# Deny all direct web requests to files in this directory
+Order Deny,Allow
+Deny from all

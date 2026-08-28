@@ -247,7 +247,10 @@ function validateTokenAuth() {
 }
 
 // Handle login request
-$input = json_decode(file_get_contents('php://input'), true);
+$input = json_decode(file_get_contents('php://input'), true) ?? [];
+if (empty($input) && !empty($_POST)) {
+    $input = $_POST;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_GET['action'] ?? '';

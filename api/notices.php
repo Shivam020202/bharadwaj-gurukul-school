@@ -5,45 +5,80 @@
  */
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth.php';
 
 /**
  * Get all notices
  */
 function getNotices($db) {
-    $activeOnly = true; // Default to active notices only for public access
-    $filters = ['select' => '*,created_at,updated_at'];
+    // Check authentication to determine if requester is admin
+    $headers = getallheaders();
+    $sessionToken = $headers['X-Session-Token'] ?? '';
+    if (empty($sessionToken) && isset($headers['Authorization']) && strpos($headers['Authorization'], 'Bearer ') === 0) {
+        $sessionToken = substr($headers['Authorization'], 7);
+    }
+    if (empty($sessionToken) && isset($_SESSION['session_token'])) {
+        $sessionToken = $_SESSION['session_token'];
+    }
 
-    if ($activeOnly) {
+    $isAdmin = false;
+    if (!empty($sessionToken)) {
+        $sessionResult = $db->select(TABLE_SESSIONS, [
+            'session_token' => 'eq.' . $sessionToken,
+            'expires_at' => ['gt' => date('c')]
+        ]);
+        if ($sessionResult['status'] === 200 && !empty($sessionResult['data'])) {
+            $isAdmin = true;
+        }
+    }
+
+    $filters = [];
+    if (!$isAdmin) {
         $filters['is_active'] = 'eq.true';
     }
 
     $result = $db->select(TABLE_NOTICES, $filters, 'created_at.desc');
 
     if ($result['status'] !== 200) {
-        jsonResponse('error', [
-            'message' => 'Failed to fetch notices.',
-            'code' => 'FETCH_ERROR'
-        ], 500);
+        if ($isAdmin) {
+            jsonResponse('error', [
+                'message' => 'Failed to fetch notices.',
+                'code' => 'FETCH_ERROR'
+            ], 500);
+        } else {
+            http_response_code(500);
+            echo json_encode([]);
+            exit;
+        }
     }
 
     $notices = $result['data'] ?? [];
 
     // Format notices
     foreach ($notices as &$notice) {
-        // Format file size
         if (!empty($notice['file_size'])) {
             $notice['file_size_formatted'] = formatBytes($notice['file_size']);
         }
 
-        // Format dates
-        $notice['created_at'] = date('M d, Y h:i A', strtotime($notice['created_at']));
-        $notice['updated_at'] = date('M d, Y h:i A', strtotime($notice['updated_at']));
+        if ($isAdmin) {
+            $notice['created_at'] = date('M d, Y h:i A', strtotime($notice['created_at']));
+            $notice['updated_at'] = date('M d, Y h:i A', strtotime($notice['updated_at']));
+        } else {
+            $notice['created_at'] = date('c', strtotime($notice['created_at']));
+            $notice['updated_at'] = date('c', strtotime($notice['updated_at']));
+        }
     }
 
-    jsonResponse('success', [
-        'notices' => $notices,
-        'count' => count($notices)
-    ]);
+    if ($isAdmin) {
+        jsonResponse('success', [
+            'notices' => $notices,
+            'count' => count($notices)
+        ]);
+    } else {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($notices, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 }
 
 /**
@@ -421,6 +456,9 @@ switch ($_GET['action'] ?? '') {
         // Require authentication for create
         $admin = requireAuth($db);
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        if (empty($data) && !empty($_POST)) {
+            $data = $_POST;
+        }
         createNotice($db, $data, $_FILES);
         break;
 
@@ -434,6 +472,9 @@ switch ($_GET['action'] ?? '') {
             jsonResponse('error', ['message' => 'Notice ID is required.'], 400);
         }
         $data = json_decode(file_get_contents('php://input'), true) ?? [];
+        if (empty($data) && !empty($_POST)) {
+            $data = $_POST;
+        }
         updateNotice($db, $id, $data, $_FILES);
         break;
 

@@ -1,0 +1,7 @@
+# Disable execution of scripts in this directory (Defense-in-depth)
+<FilesMatch "\.(php|php3|php4|php5|phtml|phps|pl|py|jsp|asp|sh|cgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+Options -Indexes

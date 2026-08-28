@@ -7,4 +7,4 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
     }
     return false;
 });
-require_once __DIR__ . '/api/test_db.php';
+require_once __DIR__ . '/api/test_local_db.php';

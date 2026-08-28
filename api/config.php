@@ -32,7 +32,7 @@ define('TABLE_ADMINS', 'admins');
 define('TABLE_SESSIONS', 'admin_sessions');
 
 // File Storage Configuration
-define('UPLOAD_DIR', __DIR__ . '/../dashboard/uploads/');
+define('UPLOAD_DIR', __DIR__ . '/../static/uploads/');
 define('MAX_FILE_SIZE', 50 * 1024 * 1024); // 50MB
 define('ALLOWED_EXTENSIONS', ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt']);
 define('ALLOWED_MIME_TYPES', [
@@ -86,185 +86,283 @@ if (!ini_get('curl.cainfo') && file_exists(__DIR__ . '/../cacert.pem')) {
  */
 class SupabaseDB
 {
-    private $url;
-    private $key;
-    private $serviceKey;
-
     public function __construct()
     {
-        $this->url = rtrim(SUPABASE_URL, '/');
-        $this->key = SUPABASE_KEY;
-        $this->serviceKey = SUPABASE_SERVICE_KEY;
+        // No-op for local DB
     }
 
-    /**
-     * Make a request to Supabase REST API
-     */
-    private function request($method, $table, $data = [], $options = [])
+    private function loadTable($table)
     {
-        $url = $this->url . '/rest/v1/' . $table;
-
-        $headers = [
-            'apikey: ' . $this->serviceKey,
-            'Authorization: Bearer ' . $this->serviceKey,
-            'Content-Type: application/json',
-            'Prefer: return=representation'
-        ];
-
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_TIMEOUT => 30,
-        ]);
-
-        // Configure CA bundle path if available
-        $caBundle = __DIR__ . '/../cacert.pem';
-        if (file_exists($caBundle)) {
-            curl_setopt($ch, CURLOPT_CAINFO, $caBundle);
+        $filePath = __DIR__ . '/data/' . $table . '.php';
+        if (!file_exists($filePath)) {
+            if ($table === 'admins') {
+                $defaultAdmins = [
+                    [
+                        'id' => '11111111-1111-1111-1111-111111111111',
+                        'username' => 'admin2',
+                        'email' => 'admin@bhardwajgurukul.com',
+                        'full_name' => 'Super Administrator',
+                        'password_hash' => '$2y$10$e0bFQprp.0PP7FC0V3iQk.FG9RPwBhJjgqtSWea9t.GH8sH3x.bCK',
+                        'is_super_admin' => true,
+                        'is_active' => true,
+                        'created_at' => date('c'),
+                        'updated_at' => date('c')
+                    ]
+                ];
+                $this->saveTable('admins', $defaultAdmins);
+                return $defaultAdmins;
+            }
+            return [];
         }
-
-        if (!empty($data)) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        if (!defined('SECURE_ACCESS')) {
+            define('SECURE_ACCESS', true);
         }
-
-        if (!empty($options['query'])) {
-            $url .= '?' . http_build_query($options['query']);
-            curl_setopt($ch, CURLOPT_URL, $url);
-        }
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        return [
-            'status' => $httpCode,
-            'data' => json_decode($response, true),
-            'raw' => $response
-        ];
+        $data = include $filePath;
+        return is_array($data) ? $data : [];
     }
 
-    /**
-     * SELECT query
-     */
+    private function saveTable($table, $data)
+    {
+        $dir = __DIR__ . '/data';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        $filePath = $dir . '/' . $table . '.php';
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $content = "<?php\nif(!defined('SECURE_ACCESS')) { header('HTTP/1.1 403 Forbidden'); exit; }\nreturn json_decode(" . var_export($json, true) . ", true);\n";
+        file_put_contents($filePath, $content, LOCK_EX);
+    }
+
+    private function matchRow($row, $filters)
+    {
+        foreach ($filters as $field => $filterVal) {
+            if ($field === 'select' || $field === 'order' || $field === 'limit') {
+                continue;
+            }
+
+            if (is_array($filterVal)) {
+                foreach ($filterVal as $op => $val) {
+                    $op = rtrim($op, '.');
+                    $rowVal = $row[$field] ?? null;
+
+                    if ($op === 'eq') {
+                        if (strval($rowVal) !== strval($val)) return false;
+                    } elseif ($op === 'gt') {
+                        if (strval($rowVal) <= strval($val)) return false;
+                    } elseif ($op === 'lt') {
+                        if (strval($rowVal) >= strval($val)) return false;
+                    }
+                }
+            } else {
+                $rowVal = $row[$field] ?? null;
+                if (strpos($filterVal, 'eq.') === 0) {
+                    $val = substr($filterVal, 3);
+                    if ($val === 'true') $val = true;
+                    elseif ($val === 'false') $val = false;
+
+                    if (is_bool($rowVal)) {
+                        if ($rowVal !== $val) return false;
+                    } else {
+                        if (strval($rowVal) !== strval($val)) return false;
+                    }
+                } elseif (strpos($filterVal, 'gt.') === 0) {
+                    $val = substr($filterVal, 3);
+                    if (strval($rowVal) <= strval($val)) return false;
+                } elseif (strpos($filterVal, 'lt.') === 0) {
+                    $val = substr($filterVal, 3);
+                    if (strval($rowVal) >= strval($val)) return false;
+                } else {
+                    if (strval($rowVal) !== strval($filterVal)) return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public function select($table, $filters = [], $order = null, $limit = null)
     {
-        $options = ['query' => $filters];
+        $rows = $this->loadTable($table);
+        $filtered = [];
+
+        foreach ($rows as $row) {
+            if ($this->matchRow($row, $filters)) {
+                $filtered[] = $row;
+            }
+        }
 
         if ($order) {
-            $options['query']['order'] = $order;
+            $parts = explode('.', $order);
+            $field = $parts[0];
+            $dir = $parts[1] ?? 'asc';
+
+            usort($filtered, function($a, $b) use ($field, $dir) {
+                $valA = $a[$field] ?? '';
+                $valB = $b[$field] ?? '';
+                if ($dir === 'desc') {
+                    return strcmp(strval($valB), strval($valA));
+                } else {
+                    return strcmp(strval($valA), strval($valB));
+                }
+            });
         }
 
         if ($limit) {
-            $options['query']['limit'] = $limit;
+            $filtered = array_slice($filtered, 0, (int)$limit);
         }
 
-        return $this->request('GET', $table, [], $options);
+        return [
+            'status' => 200,
+            'data' => $filtered
+        ];
     }
 
-    /**
-     * INSERT query
-     */
     public function insert($table, $data)
     {
-        return $this->request('POST', $table, $data);
+        $rows = $this->loadTable($table);
+
+        if (!isset($data['id'])) {
+            $data['id'] = $this->generateUUID();
+        }
+
+        $now = date('c');
+        if (!isset($data['created_at'])) {
+            $data['created_at'] = $now;
+        }
+        $data['updated_at'] = $now;
+
+        $rows[] = $data;
+        $this->saveTable($table, $rows);
+
+        return [
+            'status' => 201,
+            'data' => [$data]
+        ];
     }
 
-    /**
-     * UPDATE query
-     */
     public function update($table, $data, $filters)
     {
-        $options = ['query' => array_merge($filters, ['method' => 'PATCH'])];
-        return $this->request('PATCH', $table, $data, $options);
+        $rows = $this->loadTable($table);
+        $updated = [];
+        $hasChanges = false;
+
+        foreach ($rows as &$row) {
+            if ($this->matchRow($row, $filters)) {
+                foreach ($data as $key => $val) {
+                    $row[$key] = $val;
+                }
+                $row['updated_at'] = date('c');
+                $updated[] = $row;
+                $hasChanges = true;
+            }
+        }
+        unset($row);
+
+        if ($hasChanges) {
+            $this->saveTable($table, $rows);
+        }
+
+        return [
+            'status' => 200,
+            'data' => $updated
+        ];
     }
 
-    /**
-     * DELETE query
-     */
     public function delete($table, $filters)
     {
-        $options = ['query' => array_merge($filters, ['method' => 'DELETE'])];
-        return $this->request('DELETE', $table, [], $options);
+        $rows = $this->loadTable($table);
+        $kept = [];
+        $hasChanges = false;
+
+        foreach ($rows as $row) {
+            if ($this->matchRow($row, $filters)) {
+                $hasChanges = true;
+            } else {
+                $kept[] = $row;
+            }
+        }
+
+        if ($hasChanges) {
+            $this->saveTable($table, $kept);
+        }
+
+        return [
+            'status' => 200,
+            'data' => []
+        ];
     }
 
-    /**
-     * Upload file to Supabase Storage
-     */
     public function uploadFile($bucket, $path, $fileData, $contentType)
     {
-        $url = $this->url . '/storage/v1/object/' . $bucket . '/' . $path;
+        $fullPath = UPLOAD_DIR . $bucket . '/' . $path;
+        $dir = dirname($fullPath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
 
-        $headers = [
-            'apikey: ' . $this->serviceKey,
-            'Authorization: Bearer ' . $this->serviceKey,
-            'Content-Type: ' . $contentType,
-            'x-upsert: true'
-        ];
-
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_POSTFIELDS => $fileData,
-            CURLOPT_TIMEOUT => 60,
-            CURLOPT_SSL_VERIFYPEER => false,
-        ]);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $bytes = file_put_contents($fullPath, $fileData);
+        if ($bytes === false) {
+            return [
+                'status' => 500,
+                'raw' => 'Failed to write file to local disk.'
+            ];
+        }
 
         return [
-            'status' => $httpCode,
-            'data' => json_decode($response, true),
-            'raw' => $response
+            'status' => 200,
+            'raw' => 'File uploaded successfully'
         ];
     }
 
-    /**
-     * Get public URL for uploaded file
-     */
     public function getPublicUrl($bucket, $path)
     {
-        return $this->url . '/storage/v1/object/public/' . $bucket . '/' . $path;
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $projectPath = dirname($scriptName);
+        $projectPath = str_replace('\\', '/', $projectPath);
+        
+        if (substr($projectPath, -4) === '/api') {
+            $projectPath = substr($projectPath, 0, -4);
+        } elseif (substr($projectPath, -10) === '/dashboard') {
+            $projectPath = substr($projectPath, 0, -10);
+        }
+        
+        if ($projectPath === '.' || $projectPath === '/' || $projectPath === '\\') {
+            $projectPath = '';
+        } else {
+            $projectPath = '/' . ltrim($projectPath, '/');
+        }
+
+        return $protocol . '://' . $host . $projectPath . '/static/uploads/' . $bucket . '/' . $path;
     }
 
-    /**
-     * Delete file from Supabase Storage
-     */
     public function deleteFile($bucket, $path)
     {
-        $url = $this->url . '/storage/v1/object/' . $bucket . '/' . $path;
-
-        $headers = [
-            'apikey: ' . $this->serviceKey,
-            'Authorization: Bearer ' . $this->serviceKey,
-        ];
-
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => 'DELETE',
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYPEER => false,
-        ]);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
+        $fullPath = UPLOAD_DIR . $bucket . '/' . $path;
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+            return [
+                'status' => 200,
+                'raw' => 'File deleted successfully'
+            ];
+        }
         return [
-            'status' => $httpCode,
-            'data' => json_decode($response, true),
-            'raw' => $response
+            'status' => 404,
+            'raw' => 'File not found'
         ];
+    }
+
+    private function generateUUID()
+    {
+        return sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
     }
 }
 
