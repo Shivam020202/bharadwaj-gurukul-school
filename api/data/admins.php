@@ -10,6 +10,7 @@ return json_decode('[
         "is_super_admin": true,
         "is_active": true,
         "created_at": "2026-08-28T14:57:23+00:00",
-        "updated_at": "2026-08-28T14:57:23+00:00"
+        "updated_at": "2026-08-29T04:34:42+00:00",
+        "last_login": "2026-08-29T04:34:42+00:00"
     }
 ]', true);

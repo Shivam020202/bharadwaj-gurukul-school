@@ -246,168 +246,171 @@ function validateTokenAuth() {
     return true;
 }
 
-// Handle login request
-$input = json_decode(file_get_contents('php://input'), true) ?? [];
-if (empty($input) && !empty($_POST)) {
-    $input = $_POST;
+// Handle login request only if auth.php is the primary script entry point
+if (basename($_SERVER['SCRIPT_FILENAME']) === 'auth.php') {
+    $input = json_decode(file_get_contents('php://input'), true) ?? [];
+    if (empty($input) && !empty($_POST)) {
+        $input = $_POST;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_GET['action'] ?? '';
+
+        if ($action === 'login') {
+            // Skip CSRF for localhost requests (login.php cURL calls from same server)
+            $hostOnly = explode(':', $_SERVER['HTTP_HOST'] ?? '')[0];
+            $isLocalHost = $hostOnly === 'localhost' || $hostOnly === '127.0.0.1';
+            if (!$isLocalHost && !validateCSRF()) {
+                jsonResponse('error', ['message' => 'Invalid CSRF token.'], 403);
+            }
+
+            if (empty($input['username']) || empty($input['password'])) {
+                jsonResponse('error', [
+                    'message' => 'Username and password are required.',
+                    'code' => 'MISSING_CREDENTIALS'
+                ], 400);
+            }
+
+            $db = new SupabaseDB();
+            loginAdmin($db, $input['username'], $input['password']);
+        }
+
+        if ($action === 'logout') {
+            logoutAdmin();
+            jsonResponse('success', ['message' => 'Logged out successfully.']);
+        }
+
+        if ($action === 'check') {
+            $db = new SupabaseDB();
+            $admin = getAuthenticatedAdmin($db);
+
+            if ($admin) {
+                jsonResponse('success', [
+                    'authenticated' => true,
+                    'admin' => $admin
+                ]);
+            } else {
+                jsonResponse('success', [
+                    'authenticated' => false
+                ]);
+            }
+        }
+
+        if ($action === 'register' && ADMIN_REGISTRATION_ENABLED) {
+            // Admin registration (only for initial setup)
+            if (empty($input['username']) || empty($input['password']) ||
+                empty($input['email']) || empty($input['full_name'])) {
+                jsonResponse('error', [
+                    'message' => 'All fields are required.',
+                    'code' => 'MISSING_FIELDS'
+                ], 400);
+            }
+
+            if (!isValidEmail($input['email'])) {
+                jsonResponse('error', [
+                    'message' => 'Invalid email address.',
+                    'code' => 'INVALID_EMAIL'
+                ], 400);
+            }
+
+            if (strlen($input['password']) < 8) {
+                jsonResponse('error', [
+                    'message' => 'Password must be at least 8 characters.',
+                    'code' => 'WEAK_PASSWORD'
+                ], 400);
+            }
+
+            $db = new SupabaseDB();
+
+            // Check if username exists
+            $existing = $db->select(TABLE_ADMINS, ['username' => 'eq.' . $input['username']]);
+            if ($existing['status'] === 200 && !empty($existing['data'])) {
+                jsonResponse('error', [
+                    'message' => 'Username already exists.',
+                    'code' => 'USERNAME_EXISTS'
+                ], 409);
+            }
+
+            // Check if email exists
+            $existing = $db->select(TABLE_ADMINS, ['email' => 'eq.' . $input['email']]);
+            if ($existing['status'] === 200 && !empty($existing['data'])) {
+                jsonResponse('error', [
+                    'message' => 'Email already exists.',
+                    'code' => 'EMAIL_EXISTS'
+                ], 409);
+            }
+
+            // Create admin
+            $result = $db->insert(TABLE_ADMINS, [
+                'username' => sanitize($input['username']),
+                'email' => sanitize($input['email']),
+                'full_name' => sanitize($input['full_name']),
+                'password_hash' => hashPassword($input['password']),
+                'is_super_admin' => false
+            ]);
+
+            if ($result['status'] === 201) {
+                jsonResponse('success', [
+                    'message' => 'Admin registered successfully.'
+                ]);
+            } else {
+                jsonResponse('error', [
+                    'message' => 'Failed to register admin.',
+                    'code' => 'REGISTRATION_FAILED'
+                ], 500);
+            }
+        }
+
+        if ($action === 'change_password') {
+            $db = new SupabaseDB();
+            $admin = requireAuth($db);
+
+            if (empty($input['current_password']) || empty($input['new_password'])) {
+                jsonResponse('error', [
+                    'message' => 'Current and new password are required.',
+                    'code' => 'MISSING_FIELDS'
+                ], 400);
+            }
+
+            if (strlen($input['new_password']) < 8) {
+                jsonResponse('error', [
+                    'message' => 'New password must be at least 8 characters.',
+                    'code' => 'WEAK_PASSWORD'
+                ], 400);
+            }
+
+            // Verify current password
+            $adminResult = $db->select(TABLE_ADMINS, ['id' => 'eq.' . $admin['id']]);
+            $currentAdmin = $adminResult['data'][0] ?? null;
+
+            if (!$currentAdmin || !verifyPassword($input['current_password'], $currentAdmin['password_hash'])) {
+                jsonResponse('error', [
+                    'message' => 'Current password is incorrect.',
+                    'code' => 'INVALID_PASSWORD'
+                ], 401);
+            }
+
+            // Update password
+            $result = $db->update(TABLE_ADMINS, [
+                'password_hash' => hashPassword($input['new_password'])
+            ], ['id' => ['eq.' => $admin['id']]]);
+
+            if ($result['status'] === 204 || $result['status'] === 200) {
+                jsonResponse('success', [
+                    'message' => 'Password changed successfully.'
+                ]);
+            } else {
+                jsonResponse('error', [
+                    'message' => 'Failed to change password.',
+                    'code' => 'UPDATE_FAILED'
+                ], 500);
+            }
+        }
+    }
+
+    // If no action matched
+    jsonResponse('error', [
+        'message' => 'Invalid action.',
+        'code' => 'INVALID_ACTION'
+    ], 400);
 }
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_GET['action'] ?? '';
-
-    if ($action === 'login') {
-        // Skip CSRF for localhost requests (login.php cURL calls from same server)
-        $isLocalHost = $_SERVER['HTTP_HOST'] === 'localhost' || $_SERVER['HTTP_HOST'] === '127.0.0.1';
-        if (!$isLocalHost && !validateCSRF()) {
-            jsonResponse('error', ['message' => 'Invalid CSRF token.'], 403);
-        }
-
-        if (empty($input['username']) || empty($input['password'])) {
-            jsonResponse('error', [
-                'message' => 'Username and password are required.',
-                'code' => 'MISSING_CREDENTIALS'
-            ], 400);
-        }
-
-        $db = new SupabaseDB();
-        loginAdmin($db, $input['username'], $input['password']);
-    }
-
-    if ($action === 'logout') {
-        logoutAdmin();
-        jsonResponse('success', ['message' => 'Logged out successfully.']);
-    }
-
-    if ($action === 'check') {
-        $db = new SupabaseDB();
-        $admin = getAuthenticatedAdmin($db);
-
-        if ($admin) {
-            jsonResponse('success', [
-                'authenticated' => true,
-                'admin' => $admin
-            ]);
-        } else {
-            jsonResponse('success', [
-                'authenticated' => false
-            ]);
-        }
-    }
-
-    if ($action === 'register' && ADMIN_REGISTRATION_ENABLED) {
-        // Admin registration (only for initial setup)
-        if (empty($input['username']) || empty($input['password']) ||
-            empty($input['email']) || empty($input['full_name'])) {
-            jsonResponse('error', [
-                'message' => 'All fields are required.',
-                'code' => 'MISSING_FIELDS'
-            ], 400);
-        }
-
-        if (!isValidEmail($input['email'])) {
-            jsonResponse('error', [
-                'message' => 'Invalid email address.',
-                'code' => 'INVALID_EMAIL'
-            ], 400);
-        }
-
-        if (strlen($input['password']) < 8) {
-            jsonResponse('error', [
-                'message' => 'Password must be at least 8 characters.',
-                'code' => 'WEAK_PASSWORD'
-            ], 400);
-        }
-
-        $db = new SupabaseDB();
-
-        // Check if username exists
-        $existing = $db->select(TABLE_ADMINS, ['username' => 'eq.' . $input['username']]);
-        if ($existing['status'] === 200 && !empty($existing['data'])) {
-            jsonResponse('error', [
-                'message' => 'Username already exists.',
-                'code' => 'USERNAME_EXISTS'
-            ], 409);
-        }
-
-        // Check if email exists
-        $existing = $db->select(TABLE_ADMINS, ['email' => 'eq.' . $input['email']]);
-        if ($existing['status'] === 200 && !empty($existing['data'])) {
-            jsonResponse('error', [
-                'message' => 'Email already exists.',
-                'code' => 'EMAIL_EXISTS'
-            ], 409);
-        }
-
-        // Create admin
-        $result = $db->insert(TABLE_ADMINS, [
-            'username' => sanitize($input['username']),
-            'email' => sanitize($input['email']),
-            'full_name' => sanitize($input['full_name']),
-            'password_hash' => hashPassword($input['password']),
-            'is_super_admin' => false
-        ]);
-
-        if ($result['status'] === 201) {
-            jsonResponse('success', [
-                'message' => 'Admin registered successfully.'
-            ]);
-        } else {
-            jsonResponse('error', [
-                'message' => 'Failed to register admin.',
-                'code' => 'REGISTRATION_FAILED'
-            ], 500);
-        }
-    }
-
-    if ($action === 'change_password') {
-        $db = new SupabaseDB();
-        $admin = requireAuth($db);
-
-        if (empty($input['current_password']) || empty($input['new_password'])) {
-            jsonResponse('error', [
-                'message' => 'Current and new password are required.',
-                'code' => 'MISSING_FIELDS'
-            ], 400);
-        }
-
-        if (strlen($input['new_password']) < 8) {
-            jsonResponse('error', [
-                'message' => 'New password must be at least 8 characters.',
-                'code' => 'WEAK_PASSWORD'
-            ], 400);
-        }
-
-        // Verify current password
-        $adminResult = $db->select(TABLE_ADMINS, ['id' => 'eq.' . $admin['id']]);
-        $currentAdmin = $adminResult['data'][0] ?? null;
-
-        if (!$currentAdmin || !verifyPassword($input['current_password'], $currentAdmin['password_hash'])) {
-            jsonResponse('error', [
-                'message' => 'Current password is incorrect.',
-                'code' => 'INVALID_PASSWORD'
-            ], 401);
-        }
-
-        // Update password
-        $result = $db->update(TABLE_ADMINS, [
-            'password_hash' => hashPassword($input['new_password'])
-        ], ['id' => ['eq.' => $admin['id']]]);
-
-        if ($result['status'] === 204 || $result['status'] === 200) {
-            jsonResponse('success', [
-                'message' => 'Password changed successfully.'
-            ]);
-        } else {
-            jsonResponse('error', [
-                'message' => 'Failed to change password.',
-                'code' => 'UPDATE_FAILED'
-            ], 500);
-        }
-    }
-}
-
-// If no action matched
-jsonResponse('error', [
-    'message' => 'Invalid action.',
-    'code' => 'INVALID_ACTION'
-], 400);

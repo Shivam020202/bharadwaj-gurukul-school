@@ -8,56 +8,6 @@ require_once __DIR__ . '/../api/config.php';
 $error = '';
 $csrfToken = generateCSRFToken();
 
-// Handle login form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-
-    if (empty($username) || empty($password)) {
-        $error = 'Username and password are required.';
-    } else {
-        // Send login request to API
-        $response = sendApiRequest('POST', 'auth.php?action=login', [
-            'username' => $username,
-            'password' => $password,
-            'csrf_token' => $_POST['csrf_token'] ?? ''
-        ]);
-
-        $result = json_decode($response, true);
-
-        if (isset($result['success']) && $result['success']) {
-            // Redirect to dashboard
-            header('Location: dashboard.php');
-            exit;
-        } else {
-            $error = $result['data']['message'] ?? 'Login failed.';
-        }
-    }
-}
-
-function sendApiRequest($method, $endpoint, $data = [])
-{
-    $url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . '/api/' . $endpoint;
-
-    $ch = curl_init();
-    curl_setopt_array($ch, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CUSTOMREQUEST => $method,
-        CURLOPT_HTTPHEADER => [
-            'Content-Type: application/json',
-            'Accept: application/json',
-            'X-API-Request: true'
-        ],
-        CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_TIMEOUT => 30,
-    ]);
-
-    $response = curl_exec($ch);
-    curl_close($ch);
-
-    return $response;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -144,12 +94,14 @@ function sendApiRequest($method, $endpoint, $data = [])
 
     <div class="w-full max-w-md z-10">
         <!-- Logo & Title -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-fit h-fit rounded-2xl bg-white shadow-soft mb-4">
-                <img src="../Bhardwaj-logo.png" alt="Bhardwaj Gurukul" class="w-48 p-3 h-auto object-contain">
+        <div class="text-center mb-8 flex flex-col items-center justify-center">
+            <div class="inline-flex items-center gap-3 bg-white px-5 py-3 rounded-2xl shadow-soft mb-2">
+                <img src="../logo.png" alt="Bhardwaj Gurukul Logo" class="h-16 w-auto object-contain">
+                <div class="text-left">
+                    <h1 class="text-2xl font-bold text-ink-900 leading-tight">Bhardwaj Gurukul</h1>
+                    <p class="text-xs text-ink-600 font-semibold">Admin Dashboard</p>
+                </div>
             </div>
-            <h1 class="text-2xl font-bold text-ink-900">Bhardwaj Gurukul</h1>
-            <p class="text-sm text-ink-700 mt-1">Admin Dashboard</p>
         </div>
 
         <!-- Login Card -->
@@ -157,13 +109,10 @@ function sendApiRequest($method, $endpoint, $data = [])
             <h2 class="text-xl font-bold text-ink-900 mb-1">Welcome back</h2>
             <p class="text-sm text-ink-700 mb-6">Sign in to manage notices and updates</p>
 
-            <?php if ($error): ?>
-                <div
-                    class="mb-5 p-3 rounded-xl bg-crimson-50 border border-crimson-200 text-crimson-700 text-sm flex items-center gap-2">
-                    <i data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i>
-                    <?= sanitize($error) ?>
-                </div>
-            <?php endif; ?>
+            <div id="errorAlert" class="mb-5 p-3 rounded-xl bg-crimson-50 border border-crimson-200 text-crimson-700 text-sm flex items-center gap-2 hidden">
+                <i data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i>
+                <span id="errorText"></span>
+            </div>
 
             <form method="POST" action="" id="loginForm" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
@@ -230,16 +179,57 @@ function sendApiRequest($method, $endpoint, $data = [])
             lucide.createIcons();
         }
 
-        // Form submission with loading state
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        // Form submission with loading state and AJAX request
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
             const btnLoader = document.getElementById('btnLoader');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorText = document.getElementById('errorText');
 
+            errorAlert.classList.add('hidden');
             btn.disabled = true;
             btn.classList.add('opacity-80', 'cursor-not-allowed');
             btnText.textContent = 'Signing in...';
             btnLoader.classList.remove('hidden');
+
+            const formData = new FormData(this);
+            const credentials = {
+                username: formData.get('username'),
+                password: formData.get('password'),
+                csrf_token: formData.get('csrf_token')
+            };
+
+            try {
+                const res = await fetch('../api/auth.php?action=login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(credentials)
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    window.location.href = 'dashboard.php';
+                } else {
+                    errorText.textContent = result.data?.message || 'Login failed.';
+                    errorAlert.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                    btnText.textContent = 'Sign In';
+                    btnLoader.classList.add('hidden');
+                }
+            } catch (err) {
+                errorText.textContent = 'Connection error. Please try again.';
+                errorAlert.classList.remove('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                btnText.textContent = 'Sign In';
+                btnLoader.classList.add('hidden');
+            }
         });
 
         // Prevent form resubmission on refresh

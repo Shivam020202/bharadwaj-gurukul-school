@@ -315,9 +315,6 @@ class SupabaseDB
 
     public function getPublicUrl($bucket, $path)
     {
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        
         $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
         $projectPath = dirname($scriptName);
         $projectPath = str_replace('\\', '/', $projectPath);
@@ -334,7 +331,7 @@ class SupabaseDB
             $projectPath = '/' . ltrim($projectPath, '/');
         }
 
-        return $protocol . '://' . $host . $projectPath . '/static/uploads/' . $bucket . '/' . $path;
+        return $projectPath . '/static/uploads/' . $bucket . '/' . $path;
     }
 
     public function deleteFile($bucket, $path)

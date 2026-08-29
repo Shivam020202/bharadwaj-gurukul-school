@@ -103,7 +103,7 @@ $csrfToken = generateCSRFToken();
         <!-- Brand -->
         <div class="p-5 border-b border-saffron-100">
             <div class="flex items-center gap-3">
-                <img src="../Bhardwaj-logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                <img src="../logo.png" alt="Logo" class="w-10 h-10 object-contain">
                 <div>
                     <div class="font-bold text-ink-900 text-sm">Bhardwaj Gurukul</div>
                     <div class="text-xs text-ink-600">Admin Panel</div>
@@ -144,7 +144,7 @@ $csrfToken = generateCSRFToken();
     <!-- Mobile header -->
     <div class="lg:hidden fixed top-0 inset-x-0 z-30 bg-white border-b border-saffron-100 px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-2">
-            <img src="../Bhardwaj-logo.png" alt="Logo" class="w-8 h-8 object-contain">
+            <img src="../logo.png" alt="Logo" class="w-8 h-8 object-contain">
             <span class="font-bold text-ink-900 text-sm">Bhardwaj Gurukul</span>
         </div>
         <button onclick="toggleMobileMenu()" class="p-2 hover:bg-saffron-50 rounded-lg">
