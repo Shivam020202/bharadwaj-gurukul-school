@@ -26,11 +26,8 @@ function getNotices($db) {
 
     $isAdmin = false;
     if (!empty($sessionToken)) {
-        $sessionResult = $db->select(TABLE_SESSIONS, [
-            'session_token' => 'eq.' . $sessionToken,
-            'expires_at' => ['gt' => date('c')]
-        ]);
-        if ($sessionResult['status'] === 200 && !empty($sessionResult['data'])) {
+        $admin_id = validateSessionToken($sessionToken);
+        if ($admin_id) {
             $isAdmin = true;
         }
     }
