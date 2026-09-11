@@ -12,33 +12,22 @@ define('ADMIN_REGISTRATION_ENABLED', false);
  */
 function getAuthenticatedAdmin($db) {
     if (empty($_SESSION['admin_id']) || empty($_SESSION['session_token'])) {
-        if (!empty($_COOKIE['admin_id']) && !empty($_COOKIE['session_token'])) {
-            $_SESSION['admin_id'] = $_COOKIE['admin_id'];
+        if (!empty($_COOKIE['session_token'])) {
             $_SESSION['session_token'] = $_COOKIE['session_token'];
         } else {
             return null;
         }
     }
 
-    // Clean expired sessions
-    cleanExpiredSessions($db);
-
-    // Check session in database
-    $result = $db->select(TABLE_SESSIONS, [
-        'admin_id' => 'eq.' . $_SESSION['admin_id'],
-        'session_token' => 'eq.' . $_SESSION['session_token'],
-        'expires_at' => ['gt' => date('c')]
-    ]);
-
-    if ($result['status'] !== 200 || empty($result['data'])) {
-        // Session expired or invalid
+    $admin_id = validateSessionToken($_SESSION['session_token']);
+    if (!$admin_id) {
         logoutAdmin();
         return null;
     }
 
     // Get admin details
     $adminResult = $db->select(TABLE_ADMINS, [
-        'id' => 'eq.' . $_SESSION['admin_id']
+        'id' => 'eq.' . $admin_id
     ]);
 
     if ($adminResult['status'] !== 200 || empty($adminResult['data'])) {
@@ -47,6 +36,7 @@ function getAuthenticatedAdmin($db) {
     }
 
     $admin = $adminResult['data'][0];
+    $_SESSION['admin_id'] = $admin['id'];
 
     // Remove password hash from response
     unset($admin['password_hash']);
@@ -111,24 +101,8 @@ function loginAdmin($db, $username, $password) {
     }
 
     // Generate session token
-    $sessionToken = generateSessionToken();
+    $sessionToken = generateSessionToken($admin['id']);
     $expiresAt = date('c', time() + SESSION_LIFETIME);
-
-    // Create session in database
-    $sessionResult = $db->insert(TABLE_SESSIONS, [
-        'admin_id' => $admin['id'],
-        'session_token' => $sessionToken,
-        'expires_at' => $expiresAt,
-        'ip_address' => getClientIP(),
-        'user_agent' => getUserAgent()
-    ]);
-
-    if ($sessionResult['status'] !== 201) {
-        jsonResponse('error', [
-            'message' => 'Failed to create session.',
-            'code' => 'SESSION_ERROR'
-        ], 500);
-    }
 
     // Update last login
     $db->update(TABLE_ADMINS, [
@@ -175,14 +149,6 @@ function loginAdmin($db, $username, $password) {
  * Admin logout
  */
 function logoutAdmin() {
-    if (!empty($_SESSION['admin_id']) && !empty($_SESSION['session_token'])) {
-        $db = new SupabaseDB();
-        $db->delete(TABLE_SESSIONS, [
-            'admin_id' => 'eq.' . $_SESSION['admin_id'],
-            'session_token' => 'eq.' . $_SESSION['session_token']
-        ]);
-    }
-
     // Clear all session variables
     $_SESSION = [];
     setcookie('session_token', '', time() - 3600, '/');

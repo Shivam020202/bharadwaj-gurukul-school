@@ -52,6 +52,10 @@ define('ALLOWED_MIME_TYPES', [
     'text/plain'
 ]);
 
+if (!defined('AUTH_SECRET_KEY')) {
+    define('AUTH_SECRET_KEY', getenv('AUTH_SECRET_KEY') ?: 'bg_gurukul_secret_key_2026_x98f2a');
+}
+
 // Security Configuration
 define('SESSION_LIFETIME', 24 * 60 * 60); // 24 hours
 define('MAX_LOGIN_ATTEMPTS', 5);
@@ -440,9 +444,36 @@ function generateToken($length = 32)
 /**
  * Generate session token
  */
-function generateSessionToken()
+function generateSessionToken($admin_id = null)
 {
-    return hash('sha256', generateToken(32) . microtime(true) . uniqid());
+    if ($admin_id === null) {
+        return hash('sha256', generateToken(32) . microtime(true) . uniqid());
+    }
+    $expires = time() + SESSION_LIFETIME;
+    $data = $admin_id . '|' . $expires;
+    $signature = hash_hmac('sha256', $data, AUTH_SECRET_KEY);
+    return base64_encode($data . '|' . $signature);
+}
+
+/**
+ * Validate session token
+ */
+function validateSessionToken($token)
+{
+    $decoded = base64_decode($token);
+    if ($decoded === false) return null;
+    
+    $parts = explode('|', $decoded);
+    if (count($parts) !== 3) return null;
+    
+    list($admin_id, $expires, $signature) = $parts;
+    
+    if (time() > (int)$expires) return null;
+    
+    $expected_signature = hash_hmac('sha256', $admin_id . '|' . $expires, AUTH_SECRET_KEY);
+    if (!hash_equals($expected_signature, $signature)) return null;
+    
+    return $admin_id;
 }
 
 /**
