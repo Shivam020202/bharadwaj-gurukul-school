@@ -4,3 +4,9 @@
 # Ignore OS files
 .DS_Store
 Thumbs.db
+
+# Ignore flat-file database
+/api/data/*.php
+
+# Ignore uploaded files
+/static/uploads/
