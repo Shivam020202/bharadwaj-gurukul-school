@@ -261,7 +261,10 @@ function validateTokenAuth() {
 }
 
 // Handle login request only if auth.php is the primary script entry point
-if (basename($_SERVER['SCRIPT_FILENAME']) === 'auth.php') {
+$isDirectRequest = (strpos($_SERVER['REQUEST_URI'] ?? '', '/api/auth.php') !== false) ||
+                   (strpos($_SERVER['SCRIPT_NAME'] ?? '', 'auth.php') !== false) ||
+                   (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'auth.php');
+if ($isDirectRequest) {
     $input = json_decode(file_get_contents('php://input'), true) ?? [];
     if (empty($input) && !empty($_POST)) {
         $input = $_POST;

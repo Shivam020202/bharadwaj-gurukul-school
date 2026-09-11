@@ -4,6 +4,10 @@
  * Supabase Database & File Storage Configuration
  */
 
+if (!defined('SECURE_ACCESS')) {
+    define('SECURE_ACCESS', true);
+}
+
 // Supabase Configuration
 // Load safe local or environment overrides before falling back to repository defaults.
 if (file_exists(__DIR__ . '/config.local.php')) {
@@ -32,7 +36,11 @@ define('TABLE_ADMINS', 'admins');
 define('TABLE_SESSIONS', 'admin_sessions');
 
 // File Storage Configuration
-define('UPLOAD_DIR', __DIR__ . '/../static/uploads/');
+$targetUploadDir = __DIR__ . '/../static/uploads/';
+if (!is_writable(dirname($targetUploadDir)) && !is_writable($targetUploadDir)) {
+    $targetUploadDir = sys_get_temp_dir() . '/gurukul_uploads/';
+}
+define('UPLOAD_DIR', $targetUploadDir);
 define('MAX_FILE_SIZE', 50 * 1024 * 1024); // 50MB
 define('ALLOWED_EXTENSIONS', ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'txt']);
 define('ALLOWED_MIME_TYPES', [
@@ -99,9 +107,18 @@ class SupabaseDB
         // No-op for local DB
     }
 
+    private function getStoragePath($table)
+    {
+        $tmpPath = sys_get_temp_dir() . '/gurukul_data/' . $table . '.php';
+        if (file_exists($tmpPath)) {
+            return $tmpPath;
+        }
+        return __DIR__ . '/data/' . $table . '.php';
+    }
+
     private function loadTable($table)
     {
-        $filePath = __DIR__ . '/data/' . $table . '.php';
+        $filePath = $this->getStoragePath($table);
         if (!file_exists($filePath)) {
             if ($table === 'admins') {
                 $defaultAdmins = [
@@ -132,13 +149,16 @@ class SupabaseDB
     private function saveTable($table, $data)
     {
         $dir = __DIR__ . '/data';
+        if (!is_dir($dir) || !is_writable($dir)) {
+            $dir = sys_get_temp_dir() . '/gurukul_data';
+        }
         if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
+            @mkdir($dir, 0755, true);
         }
         $filePath = $dir . '/' . $table . '.php';
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $content = "<?php\nif(!defined('SECURE_ACCESS')) { header('HTTP/1.1 403 Forbidden'); exit; }\nreturn json_decode(" . var_export($json, true) . ", true);\n";
-        file_put_contents($filePath, $content, LOCK_EX);
+        @file_put_contents($filePath, $content, LOCK_EX);
     }
 
     private function matchRow($row, $filters)
@@ -519,11 +539,11 @@ function validateCSRF($token = null)
     if (empty($token)) {
         return false;
     }
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = $token;
+    $expected = $_COOKIE['csrf_token'] ?? $_SESSION['csrf_token'] ?? null;
+    if (empty($expected)) {
         return true;
     }
-    return hash_equals($_SESSION['csrf_token'], $token);
+    return hash_equals($expected, $token);
 }
 
 /**
@@ -531,10 +551,20 @@ function validateCSRF($token = null)
  */
 function generateCSRFToken()
 {
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = generateToken(16);
+    if (empty($_COOKIE['csrf_token']) && empty($_SESSION['csrf_token'])) {
+        $token = generateToken(16);
+        $_SESSION['csrf_token'] = $token;
+    } else {
+        $token = $_COOKIE['csrf_token'] ?? $_SESSION['csrf_token'];
     }
-    return $_SESSION['csrf_token'];
+
+    $_SESSION['csrf_token'] = $token;
+    if (empty($_COOKIE['csrf_token']) || $_COOKIE['csrf_token'] !== $token) {
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+                   (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+        @setcookie('csrf_token', $token, 0, '/', '', $isHttps, false);
+    }
+    return $token;
 }
 
 // Initialize CSRF token
