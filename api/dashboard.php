@@ -96,7 +96,7 @@ $csrfToken = generateCSRFToken();
         }
     </style>
 </head>
-<body class="min-h-screen flex">
+<body class="min-h-screen bg-[#f8f6f1]">
 
     <!-- Sidebar -->
     <aside class="w-64 bg-white border-r border-saffron-100 flex flex-col hidden lg:flex fixed h-full z-30">
@@ -174,7 +174,7 @@ $csrfToken = generateCSRFToken();
     </div>
 
     <!-- Main Content -->
-    <main class="flex-1 lg:ml-64 pt-14 lg:pt-0">
+    <main class="lg:ml-64 pt-14 lg:pt-0">
 
         <!-- ===== DASHBOARD PAGE ===== -->
         <div id="page-dashboard" class="page-content">
