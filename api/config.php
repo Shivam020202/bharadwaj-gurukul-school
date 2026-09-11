@@ -65,9 +65,17 @@ if (php_sapi_name() !== 'cli' && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Start session for authentication (only in web context)
 if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE) {
+    if (session_save_path() === '' || !is_writable(session_save_path())) {
+        @session_save_path('/tmp');
+    }
+    ini_set('session.cookie_path', '/');
     ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
-    ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.cookie_samesite', 'Lax');
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+               (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    if ($isHttps) {
+        ini_set('session.cookie_secure', 1);
+    }
     session_start();
 }
 
@@ -503,15 +511,19 @@ function isLoginAllowed($email)
 /**
  * Validate CSRF token
  */
-function validateCSRF()
+function validateCSRF($token = null)
 {
-    if (
-        !isset($_POST['csrf_token']) || empty($_SESSION['csrf_token']) ||
-        $_POST['csrf_token'] !== $_SESSION['csrf_token']
-    ) {
+    if ($token === null) {
+        $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+    }
+    if (empty($token)) {
         return false;
     }
-    return true;
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = $token;
+        return true;
+    }
+    return hash_equals($_SESSION['csrf_token'], $token);
 }
 
 /**

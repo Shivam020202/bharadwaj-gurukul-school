@@ -12,7 +12,12 @@ define('ADMIN_REGISTRATION_ENABLED', false);
  */
 function getAuthenticatedAdmin($db) {
     if (empty($_SESSION['admin_id']) || empty($_SESSION['session_token'])) {
-        return null;
+        if (!empty($_COOKIE['admin_id']) && !empty($_COOKIE['session_token'])) {
+            $_SESSION['admin_id'] = $_COOKIE['admin_id'];
+            $_SESSION['session_token'] = $_COOKIE['session_token'];
+        } else {
+            return null;
+        }
     }
 
     // Clean expired sessions
@@ -137,6 +142,13 @@ function loginAdmin($db, $username, $password) {
     $_SESSION['full_name'] = $admin['full_name'];
     $_SESSION['username'] = $admin['username'];
 
+    // Set cookies for serverless session persistence
+    $cookieLifetime = time() + SESSION_LIFETIME;
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+               (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    setcookie('session_token', $sessionToken, $cookieLifetime, '/', '', $isHttps, true);
+    setcookie('admin_id', $admin['id'], $cookieLifetime, '/', '', $isHttps, true);
+
     // Clear login attempts
     unset($_SESSION['login_attempts'][getClientIP() . '_' . strtolower($username)]);
 
@@ -173,6 +185,8 @@ function logoutAdmin() {
 
     // Clear all session variables
     $_SESSION = [];
+    setcookie('session_token', '', time() - 3600, '/');
+    setcookie('admin_id', '', time() - 3600, '/');
 
     // Delete session cookie
     if (ini_get('session.use_cookies')) {
@@ -257,10 +271,10 @@ if (basename($_SERVER['SCRIPT_FILENAME']) === 'auth.php') {
         $action = $_GET['action'] ?? '';
 
         if ($action === 'login') {
-            // Skip CSRF for localhost requests (login.php cURL calls from same server)
+            $csrfCandidate = $input['csrf_token'] ?? $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
             $hostOnly = explode(':', $_SERVER['HTTP_HOST'] ?? '')[0];
             $isLocalHost = $hostOnly === 'localhost' || $hostOnly === '127.0.0.1';
-            if (!$isLocalHost && !validateCSRF()) {
+            if (!$isLocalHost && !validateCSRF($csrfCandidate)) {
                 jsonResponse('error', ['message' => 'Invalid CSRF token.'], 403);
             }
 

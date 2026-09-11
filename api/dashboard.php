@@ -3,16 +3,16 @@
  * Bhardwaj Gurukul - Admin Dashboard
  * Main management interface for notices
  */
-session_start();
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth.php';
 
-// Check authentication
-if (empty($_SESSION['admin_id']) || empty($_SESSION['session_token'])) {
+$db = new SupabaseDB();
+$admin = getAuthenticatedAdmin($db);
+if (!$admin) {
     header('Location: /dashboard/login.php');
     exit;
 }
 
-$db = new SupabaseDB();
 $csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>

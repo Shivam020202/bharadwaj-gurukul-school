@@ -21,7 +21,7 @@ $csrfToken = generateCSRFToken();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Forum&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="/Bhardwaj-logo.ico">
+    <link rel="icon" type="image/png" href="/Bhardwaj-logo.png">
     <script>
         tailwind.config = {
             theme: {
@@ -213,6 +213,10 @@ $csrfToken = generateCSRFToken();
                 const result = await res.json();
 
                 if (result.success) {
+                    if (result.data?.session?.token) {
+                        document.cookie = `session_token=${result.data.session.token}; path=/; max-age=86400; SameSite=Lax`;
+                        document.cookie = `admin_id=${result.data.admin.id}; path=/; max-age=86400; SameSite=Lax`;
+                    }
                     window.location.href = '/dashboard/dashboard.php';
                 } else {
                     errorText.textContent = result.data?.message || 'Login failed.';

@@ -20,6 +20,9 @@ function getNotices($db) {
     if (empty($sessionToken) && isset($_SESSION['session_token'])) {
         $sessionToken = $_SESSION['session_token'];
     }
+    if (empty($sessionToken) && !empty($_COOKIE['session_token'])) {
+        $sessionToken = $_COOKIE['session_token'];
+    }
 
     $isAdmin = false;
     if (!empty($sessionToken)) {
